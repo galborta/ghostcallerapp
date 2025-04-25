@@ -56,4 +56,10 @@ flutter:
   assets:
     - assets/images/
     - assets/fonts/
+    - assets/animations/
     - .env
+
+  fonts:
+    - family: Mourier
+      fonts:
+        - asset: assets/fonts/Mourier-Regular.otf
