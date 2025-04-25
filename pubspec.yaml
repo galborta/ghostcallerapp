@@ -53,4 +53,3 @@ flutter:
     - assets/images/
     - assets/fonts/
     - .env
-    - .env.example
