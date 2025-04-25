@@ -33,6 +33,7 @@ dependencies:
   connectivity_plus: ^5.0.2
   cupertino_icons: ^1.0.8
   font_awesome_flutter: ^10.7.0
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -51,3 +52,5 @@ flutter:
   assets:
     - assets/images/
     - assets/fonts/
+    - .env
+    - .env.example
