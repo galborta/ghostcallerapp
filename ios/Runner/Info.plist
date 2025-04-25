@@ -54,6 +54,19 @@
 				<string>com.example.meditationApp</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>meditationapp</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>com.example.meditationApp</string>
+			<key>CFBundleURLHostAllowed</key>
+			<array>
+				<string>artist</string>
+				<string>refer</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
