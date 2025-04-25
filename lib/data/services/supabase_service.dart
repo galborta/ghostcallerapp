@@ -1,11 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Service class for handling Supabase operations
 class SupabaseService {
   /// Private constructor
-  SupabaseService._internal();
+  SupabaseService._internal() {
+    try {
+      _client = Supabase.instance.client;
+    } catch (e) {
+      debugPrint('Error initializing SupabaseService: $e');
+      rethrow;
+    }
+  }
 
   /// Singleton instance
   static final SupabaseService _instance = SupabaseService._internal();
@@ -13,55 +19,102 @@ class SupabaseService {
   /// Factory constructor to return the singleton instance
   factory SupabaseService() => _instance;
 
-  bool _isInitialized = false;
-  late SupabaseClient _client;
+  late final SupabaseClient _client;
 
   /// Get the Supabase client instance
-  SupabaseClient get client {
-    if (!_isInitialized) {
-      throw Exception('SupabaseService must be initialized before use.');
-    }
-    return _client;
-  }
+  SupabaseClient get client => _client;
 
   /// Get the current authenticated user
-  User? get currentUser => Supabase.instance.client.auth.currentUser;
+  User? get currentUser => client.auth.currentUser;
 
   /// Get the current session
-  Session? get currentSession => Supabase.instance.client.auth.currentSession;
+  Session? get currentSession => client.auth.currentSession;
 
   /// Check if user is authenticated
-  bool get isAuthenticated => Supabase.instance.client.auth.currentUser != null;
-
-  /// Initialize the Supabase service
-  Future<void> initialize() async {
-    if (_isInitialized) return;
-
-    final url = dotenv.env['SUPABASE_URL'];
-    final anonKey = dotenv.env['SUPABASE_ANON_KEY'];
-
-    if (url == null || anonKey == null) {
-      throw Exception('Missing Supabase configuration.');
-    }
-
-    await Supabase.initialize(
-      url: url,
-      anonKey: anonKey,
-    );
-
-    _client = Supabase.instance.client;
-    _isInitialized = true;
-  }
+  bool get isAuthenticated => client.auth.currentUser != null;
 
   /// Sign up a new user with email and password
   Future<AuthResponse> signUp({
     required String email,
     required String password,
   }) async {
-    return await client.auth.signUp(
-      email: email,
-      password: password,
-    );
+    try {
+      debugPrint('Attempting to sign up user: $email');
+      
+      // Configure deep linking URL with exact format
+      final redirectUrl = kDebugMode
+          ? 'io.supabase.flutter://signup-callback/'
+          : 'com.example.meditationApp://signup-callback/';
+      
+      debugPrint('Using redirect URL: $redirectUrl');
+      
+      final response = await client.auth.signUp(
+        email: email,
+        password: password,
+        emailRedirectTo: redirectUrl,
+      );
+      
+      if (response.user != null) {
+        debugPrint('Sign up successful. User ID: ${response.user!.id}');
+        debugPrint('Email confirmation status: ${response.user!.emailConfirmedAt != null}');
+        debugPrint('Session status: ${response.session != null ? 'Active' : 'Pending email confirmation'}');
+      } else {
+        debugPrint('Sign up completed but user object is null. This might be due to email confirmation requirement.');
+      }
+      
+      return response;
+    } catch (e) {
+      debugPrint('Sign up error details:');
+      if (e is AuthException) {
+        debugPrint('Auth error code: ${e.statusCode}');
+        debugPrint('Auth error message: ${e.message}');
+        rethrow;
+      }
+      debugPrint('Unexpected error during sign up: $e');
+      throw AuthException('Failed to sign up: ${e.toString()}');
+    }
+  }
+
+  /// Verify email with token
+  Future<void> verifyEmail(String token) async {
+    try {
+      debugPrint('Attempting to verify email with token');
+      await client.auth.verifyOTP(
+        token: token,
+        type: OtpType.signup,
+      );
+      debugPrint('Email verified successfully');
+    } catch (e) {
+      debugPrint('Error verifying email: $e');
+      rethrow;
+    }
+  }
+
+  /// Resend confirmation email
+  Future<void> resendConfirmationEmail({required String email}) async {
+    try {
+      debugPrint('Attempting to resend confirmation email to: $email');
+      
+      // Configure deep linking URL with exact format
+      final redirectUrl = kDebugMode
+          ? 'io.supabase.flutter://signup-callback/'
+          : 'com.example.meditationApp://signup-callback/';
+          
+      debugPrint('Using redirect URL: $redirectUrl');
+      
+      await client.auth.resend(
+        type: OtpType.signup,
+        email: email,
+        emailRedirectTo: redirectUrl,
+      );
+      debugPrint('Confirmation email resent successfully');
+    } catch (e) {
+      debugPrint('Resend confirmation error: $e');
+      if (e is AuthException) {
+        rethrow;
+      }
+      throw AuthException('Failed to resend confirmation email: ${e.toString()}');
+    }
   }
 
   /// Sign in with email and password
@@ -69,28 +122,59 @@ class SupabaseService {
     required String email,
     required String password,
   }) async {
-    return await client.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      debugPrint('Attempting to sign in user: $email');
+      final response = await client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+      debugPrint('Sign in response: ${response.user != null ? 'Success' : 'Failed'}');
+      return response;
+    } catch (e) {
+      debugPrint('Sign in error: $e');
+      if (e is AuthException) {
+        rethrow;
+      }
+      throw AuthException('Failed to sign in: ${e.toString()}');
+    }
   }
 
   /// Sign out the current user
   Future<void> signOut() async {
-    await client.auth.signOut();
+    try {
+      await client.auth.signOut();
+    } catch (e) {
+      debugPrint('Sign out error: $e');
+      throw AuthException('Failed to sign out: ${e.toString()}');
+    }
   }
 
   /// Reset password for a user
   Future<void> resetPassword({required String email}) async {
-    await client.auth.resetPasswordForEmail(email);
+    try {
+      await client.auth.resetPasswordForEmail(
+        email,
+        redirectTo: kDebugMode
+            ? 'io.supabase.flutter://reset-callback/'
+            : 'com.example.meditationApp://reset-callback/',
+      );
+    } catch (e) {
+      debugPrint('Reset password error: $e');
+      throw AuthException('Failed to reset password: ${e.toString()}');
+    }
   }
 
   /// Update password for the current user
   Future<void> updatePassword({required String newPassword}) async {
     if (!isAuthenticated) {
-      throw Exception('User must be authenticated to update password');
+      throw AuthException('User must be authenticated to update password');
     }
-    await client.auth.updateUser(UserAttributes(password: newPassword));
+    try {
+      await client.auth.updateUser(UserAttributes(password: newPassword));
+    } catch (e) {
+      debugPrint('Update password error: $e');
+      throw AuthException('Failed to update password: ${e.toString()}');
+    }
   }
 
   /// Get user metadata
@@ -99,9 +183,14 @@ class SupabaseService {
   /// Update user metadata
   Future<UserResponse> updateUserMetadata(Map<String, dynamic> metadata) async {
     if (!isAuthenticated) {
-      throw Exception('User must be authenticated to update metadata');
+      throw AuthException('User must be authenticated to update metadata');
     }
-    return await client.auth.updateUser(UserAttributes(data: metadata));
+    try {
+      return await client.auth.updateUser(UserAttributes(data: metadata));
+    } catch (e) {
+      debugPrint('Update metadata error: $e');
+      throw AuthException('Failed to update metadata: ${e.toString()}');
+    }
   }
 
   /// Get auth state changes stream
@@ -113,4 +202,21 @@ class SupabaseService {
             state.event == AuthChangeEvent.signedIn ||
             state.event == AuthChangeEvent.signedOut,
       );
+
+  /// Exchange OAuth code for session
+  Future<void> exchangeCode(String code) async {
+    try {
+      debugPrint('Attempting to exchange code for session');
+      await client.auth.exchangeCodeForSession(code);
+      debugPrint('Code exchange successful');
+      
+      if (currentUser != null) {
+        debugPrint('User is now authenticated: ${currentUser!.id}');
+        debugPrint('Email confirmation status: ${currentUser!.emailConfirmedAt != null}');
+      }
+    } catch (e) {
+      debugPrint('Error exchanging code: $e');
+      rethrow;
+    }
+  }
 }

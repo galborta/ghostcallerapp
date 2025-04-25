@@ -4,16 +4,13 @@ part 'user_model.freezed.dart';
 part 'user_model.g.dart';
 
 @freezed
-class UserModel with _$UserModel {
-  const factory UserModel({
+class User with _$User {
+  const factory User({
     required String id,
     required String email,
-    String? fullName,
-    String? avatarUrl,
-    @Default(false) bool isArtist,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-  }) = _UserModel;
+    Map<String, dynamic>? metadata,
+    @JsonKey(name: 'created_at') DateTime? createdAt,
+  }) = _User;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 } 
