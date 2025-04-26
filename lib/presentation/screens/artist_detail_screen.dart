@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meditation_app/data/models/artist_model.dart';
-import 'package:meditation_app/presentation/theme/spacing.dart';
+import '../../data/models/artist_model.dart';
+import '../../data/models/track_model.dart';
+import '../state/artist_provider.dart';
+import '../state/track_provider.dart';
+import '../theme/spacing.dart';
+import '../widgets/track_list_item.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ArtistDetailScreen extends ConsumerWidget {
@@ -15,26 +19,19 @@ class ArtistDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: Replace with actual artist provider
-    final artist = Artist(
-      id: artistId,
-      name: 'Artist Name',
-      bio: 'Full biography',
-      shortBio: 'Short bio',
-      imageUrl: 'https://example.com/image.jpg',
-      featured: true,
-      revenueSharePercentage: 50,
-      referralCode: 'CODE123',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
+    final artistAsync = ref.watch(artistByIdProvider(artistId));
+    final tracksAsync = ref.watch(tracksByArtistProvider(artistId));
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(context, artist),
-          _buildContent(context, artist),
-        ],
+      body: artistAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(child: Text('Error: $error')),
+        data: (artist) => CustomScrollView(
+          slivers: [
+            _buildAppBar(context, artist),
+            _buildContent(context, artist, tracksAsync),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/session-setup/$artistId'),
@@ -102,7 +99,7 @@ class ArtistDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context, Artist artist) {
+  Widget _buildContent(BuildContext context, Artist artist, AsyncValue<List<Track>> tracksAsync) {
     return SliverPadding(
       padding: const EdgeInsets.all(Spacing.medium),
       sliver: SliverList(
@@ -135,12 +132,38 @@ class ArtistDetailScreen extends ConsumerWidget {
                 ),
           ),
           const SizedBox(height: Spacing.small),
-          // TODO: Replace with actual tracks list
-          const Center(
-            child: Padding(
-              padding: EdgeInsets.all(Spacing.large),
-              child: Text('Coming soon...'),
+          tracksAsync.when(
+            loading: () => const Center(
+              child: Padding(
+                padding: EdgeInsets.all(Spacing.large),
+                child: CircularProgressIndicator(),
+              ),
             ),
+            error: (error, stack) => Center(
+              child: Padding(
+                padding: const EdgeInsets.all(Spacing.large),
+                child: Text('Error loading tracks: $error'),
+              ),
+            ),
+            data: (tracks) => tracks.isEmpty
+                ? const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(Spacing.large),
+                      child: Text('No tracks available'),
+                    ),
+                  )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: tracks.length,
+                    itemBuilder: (context, index) {
+                      final track = tracks[index];
+                      return TrackListItem(
+                        track: track,
+                        onTap: () => context.push('/session-setup/$artistId/${track.id}'),
+                      );
+                    },
+                  ),
           ),
           // Add extra padding at bottom for FAB
           const SizedBox(height: 80),

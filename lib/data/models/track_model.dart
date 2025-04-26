@@ -8,13 +8,19 @@ class Track with _$Track {
   const factory Track({
     required String id,
     required String title,
-    required String artistId,
-    required String audioUrl,
-    required String audioStoragePath,
+    String? description,
+    @JsonKey(name: 'artist_id') required String artistId,
+    @JsonKey(name: 'audio_url') required String audioUrl,
+    @JsonKey(name: 'audio_storage_path') required String audioStoragePath,
+    @JsonKey(name: 'cover_image_url') String? coverImageUrl,
     required int duration,
-    @Default(false) bool isGuided,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    @JsonKey(name: 'is_guided') required bool isGuided,
+    required String category,
+    List<String>? tags,
+    @JsonKey(name: 'is_premium') @Default(false) bool isPremium,
+    double? price,
+    @JsonKey(name: 'created_at') DateTime? createdAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
   }) = _Track;
 
   factory Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);

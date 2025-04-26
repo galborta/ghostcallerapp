@@ -2,7 +2,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Users table
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     email TEXT UNIQUE NOT NULL,
     full_name TEXT,
@@ -12,13 +12,26 @@ CREATE TABLE users (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Add is_admin column to users table if it doesn't exist
+DO $$ 
+BEGIN 
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM information_schema.columns 
+        WHERE table_name = 'users' 
+        AND column_name = 'is_admin'
+    ) THEN
+        ALTER TABLE users ADD COLUMN is_admin BOOLEAN DEFAULT FALSE;
+    END IF;
+END $$;
+
 -- Create an index on email for faster lookups
 CREATE INDEX idx_users_email ON users(email);
 
 -- Artists table
-CREATE TABLE artists (
+CREATE TABLE IF NOT EXISTS artists (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     bio TEXT,
     website_url TEXT,
     social_links JSONB,
@@ -32,17 +45,19 @@ CREATE TABLE artists (
 CREATE INDEX idx_artists_user_id ON artists(user_id);
 
 -- Meditation Tracks table
-CREATE TABLE meditation_tracks (
+CREATE TABLE IF NOT EXISTS meditation_tracks (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    artist_id UUID NOT NULL REFERENCES artists(id) ON DELETE CASCADE,
+    artist_id UUID REFERENCES artists(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     description TEXT,
     duration INTEGER NOT NULL, -- Duration in seconds
     audio_url TEXT NOT NULL,
+    audio_storage_path TEXT NOT NULL,
     cover_image_url TEXT,
     category TEXT NOT NULL,
     tags TEXT[],
     is_premium BOOLEAN DEFAULT FALSE,
+    is_guided BOOLEAN DEFAULT FALSE,
     price DECIMAL(10,2),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
@@ -55,10 +70,10 @@ CREATE INDEX idx_meditation_tracks_category ON meditation_tracks(category);
 CREATE INDEX idx_meditation_tracks_is_premium ON meditation_tracks(is_premium);
 
 -- Meditation Sessions table
-CREATE TABLE meditation_sessions (
+CREATE TABLE IF NOT EXISTS meditation_sessions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    track_id UUID NOT NULL REFERENCES meditation_tracks(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    track_id UUID REFERENCES meditation_tracks(id) ON DELETE CASCADE,
     start_time TIMESTAMPTZ NOT NULL,
     end_time TIMESTAMPTZ,
     duration INTEGER, -- Actual duration in seconds
@@ -66,14 +81,16 @@ CREATE TABLE meditation_sessions (
     rating INTEGER CHECK (rating >= 1 AND rating <= 5),
     feedback TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id),
     CONSTRAINT fk_track FOREIGN KEY (track_id) REFERENCES meditation_tracks(id)
 );
 
 -- Create indexes for analytics and queries
-CREATE INDEX idx_meditation_sessions_user_id ON meditation_sessions(user_id);
-CREATE INDEX idx_meditation_sessions_track_id ON meditation_sessions(track_id);
-CREATE INDEX idx_meditation_sessions_start_time ON meditation_sessions(start_time);
+CREATE INDEX IF NOT EXISTS idx_meditation_sessions_user ON meditation_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_meditation_sessions_track ON meditation_sessions(track_id);
+CREATE INDEX IF NOT EXISTS idx_tracks_artist ON meditation_tracks(artist_id);
+CREATE INDEX IF NOT EXISTS idx_artists_user ON artists(user_id);
 
 -- User Referrals table
 CREATE TABLE user_referrals (

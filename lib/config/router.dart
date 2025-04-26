@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meditation_app/presentation/widgets/scaffold_with_bottom_nav.dart';
+import 'package:meditation_app/app/features/meditation/presentation/screens/session_setup_screen.dart';
+import 'package:meditation_app/app/features/settings/presentation/screens/admin_screen.dart';
 
 // Route path constants
 class RoutePath {
@@ -11,9 +13,12 @@ class RoutePath {
   static const String forgotPassword = '/forgot-password';
   static const String home = '/home';
   static const String artistDetail = '/artist/:id';
+  static const String sessionSetup = '/session-setup/:artistId';
+  static const String sessionSetupWithTrack = '/session-setup/:artistId/:trackId';
   static const String meditationPlayer = '/meditation/:id';
   static const String calendar = '/calendar';
   static const String settings = '/settings';
+  static const String adminUpload = '/admin/upload';
 }
 
 // Route name constants
@@ -24,9 +29,12 @@ class RouteName {
   static const String forgotPassword = 'forgotPassword';
   static const String home = 'home';
   static const String artistDetail = 'artistDetail';
+  static const String sessionSetup = 'sessionSetup';
+  static const String sessionSetupWithTrack = 'sessionSetupWithTrack';
   static const String meditationPlayer = 'meditationPlayer';
   static const String calendar = 'calendar';
   static const String settings = 'settings';
+  static const String adminUpload = 'adminUpload';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -104,6 +112,21 @@ final routerProvider = Provider<GoRouter>((ref) {
                 ),
               ),
               GoRoute(
+                path: 'session-setup/:artistId',
+                name: RouteName.sessionSetup,
+                builder: (context, state) => SessionSetupScreen(
+                  artistId: state.pathParameters['artistId']!,
+                ),
+              ),
+              GoRoute(
+                path: 'session-setup/:artistId/:trackId',
+                name: RouteName.sessionSetupWithTrack,
+                builder: (context, state) => SessionSetupScreen(
+                  artistId: state.pathParameters['artistId']!,
+                  trackId: state.pathParameters['trackId'],
+                ),
+              ),
+              GoRoute(
                 path: 'meditation/:id',
                 name: RouteName.meditationPlayer,
                 builder: (context, state) => MeditationPlayerScreen(
@@ -125,6 +148,13 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: RoutePath.settings,
             name: RouteName.settings,
             builder: (context, state) => const SettingsScreen(),
+            routes: [
+              GoRoute(
+                path: 'upload',
+                name: RouteName.adminUpload,
+                builder: (context, state) => const AdminScreen(),
+              ),
+            ],
           ),
         ],
       ),
@@ -175,6 +205,14 @@ class HomeScreen extends StatelessWidget {
 class ArtistDetailScreen extends StatelessWidget {
   const ArtistDetailScreen({super.key, required this.artistId});
   final String artistId;
+  @override
+  Widget build(BuildContext context) => const Placeholder();
+}
+
+class SessionSetupScreen extends StatelessWidget {
+  const SessionSetupScreen({super.key, required this.artistId, this.trackId});
+  final String artistId;
+  final String? trackId;
   @override
   Widget build(BuildContext context) => const Placeholder();
 }

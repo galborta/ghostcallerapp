@@ -10,6 +10,7 @@ class User with _$User {
     required String email,
     Map<String, dynamic>? metadata,
     @JsonKey(name: 'created_at') DateTime? createdAt,
+    @Default(false) bool isAdmin,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

@@ -22,13 +22,27 @@ Track _$TrackFromJson(Map<String, dynamic> json) {
 mixin _$Track {
   String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  @JsonKey(name: 'artist_id')
   String get artistId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'audio_url')
   String get audioUrl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'audio_storage_path')
   String get audioStoragePath => throw _privateConstructorUsedError;
+  @JsonKey(name: 'cover_image_url')
+  String? get coverImageUrl => throw _privateConstructorUsedError;
   int get duration => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_guided')
   bool get isGuided => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get updatedAt => throw _privateConstructorUsedError;
+  String get category => throw _privateConstructorUsedError;
+  List<String>? get tags => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_premium')
+  bool get isPremium => throw _privateConstructorUsedError;
+  double? get price => throw _privateConstructorUsedError;
+  @JsonKey(name: 'created_at')
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'updated_at')
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this Track to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,13 +61,19 @@ abstract class $TrackCopyWith<$Res> {
   $Res call(
       {String id,
       String title,
-      String artistId,
-      String audioUrl,
-      String audioStoragePath,
+      String? description,
+      @JsonKey(name: 'artist_id') String artistId,
+      @JsonKey(name: 'audio_url') String audioUrl,
+      @JsonKey(name: 'audio_storage_path') String audioStoragePath,
+      @JsonKey(name: 'cover_image_url') String? coverImageUrl,
       int duration,
-      bool isGuided,
-      DateTime createdAt,
-      DateTime updatedAt});
+      @JsonKey(name: 'is_guided') bool isGuided,
+      String category,
+      List<String>? tags,
+      @JsonKey(name: 'is_premium') bool isPremium,
+      double? price,
+      @JsonKey(name: 'created_at') DateTime? createdAt,
+      @JsonKey(name: 'updated_at') DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -73,13 +93,19 @@ class _$TrackCopyWithImpl<$Res, $Val extends Track>
   $Res call({
     Object? id = null,
     Object? title = null,
+    Object? description = freezed,
     Object? artistId = null,
     Object? audioUrl = null,
     Object? audioStoragePath = null,
+    Object? coverImageUrl = freezed,
     Object? duration = null,
     Object? isGuided = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
+    Object? category = null,
+    Object? tags = freezed,
+    Object? isPremium = null,
+    Object? price = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -90,6 +116,10 @@ class _$TrackCopyWithImpl<$Res, $Val extends Track>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       artistId: null == artistId
           ? _value.artistId
           : artistId // ignore: cast_nullable_to_non_nullable
@@ -102,6 +132,10 @@ class _$TrackCopyWithImpl<$Res, $Val extends Track>
           ? _value.audioStoragePath
           : audioStoragePath // ignore: cast_nullable_to_non_nullable
               as String,
+      coverImageUrl: freezed == coverImageUrl
+          ? _value.coverImageUrl
+          : coverImageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       duration: null == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
@@ -110,14 +144,30 @@ class _$TrackCopyWithImpl<$Res, $Val extends Track>
           ? _value.isGuided
           : isGuided // ignore: cast_nullable_to_non_nullable
               as bool,
-      createdAt: null == createdAt
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      tags: freezed == tags
+          ? _value.tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      isPremium: null == isPremium
+          ? _value.isPremium
+          : isPremium // ignore: cast_nullable_to_non_nullable
+              as bool,
+      price: freezed == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as double?,
+      createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
+              as DateTime?,
+      updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -132,13 +182,19 @@ abstract class _$$TrackImplCopyWith<$Res> implements $TrackCopyWith<$Res> {
   $Res call(
       {String id,
       String title,
-      String artistId,
-      String audioUrl,
-      String audioStoragePath,
+      String? description,
+      @JsonKey(name: 'artist_id') String artistId,
+      @JsonKey(name: 'audio_url') String audioUrl,
+      @JsonKey(name: 'audio_storage_path') String audioStoragePath,
+      @JsonKey(name: 'cover_image_url') String? coverImageUrl,
       int duration,
-      bool isGuided,
-      DateTime createdAt,
-      DateTime updatedAt});
+      @JsonKey(name: 'is_guided') bool isGuided,
+      String category,
+      List<String>? tags,
+      @JsonKey(name: 'is_premium') bool isPremium,
+      double? price,
+      @JsonKey(name: 'created_at') DateTime? createdAt,
+      @JsonKey(name: 'updated_at') DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -156,13 +212,19 @@ class __$$TrackImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? title = null,
+    Object? description = freezed,
     Object? artistId = null,
     Object? audioUrl = null,
     Object? audioStoragePath = null,
+    Object? coverImageUrl = freezed,
     Object? duration = null,
     Object? isGuided = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
+    Object? category = null,
+    Object? tags = freezed,
+    Object? isPremium = null,
+    Object? price = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_$TrackImpl(
       id: null == id
@@ -173,6 +235,10 @@ class __$$TrackImplCopyWithImpl<$Res>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       artistId: null == artistId
           ? _value.artistId
           : artistId // ignore: cast_nullable_to_non_nullable
@@ -185,6 +251,10 @@ class __$$TrackImplCopyWithImpl<$Res>
           ? _value.audioStoragePath
           : audioStoragePath // ignore: cast_nullable_to_non_nullable
               as String,
+      coverImageUrl: freezed == coverImageUrl
+          ? _value.coverImageUrl
+          : coverImageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       duration: null == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
@@ -193,14 +263,30 @@ class __$$TrackImplCopyWithImpl<$Res>
           ? _value.isGuided
           : isGuided // ignore: cast_nullable_to_non_nullable
               as bool,
-      createdAt: null == createdAt
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      tags: freezed == tags
+          ? _value._tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      isPremium: null == isPremium
+          ? _value.isPremium
+          : isPremium // ignore: cast_nullable_to_non_nullable
+              as bool,
+      price: freezed == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as double?,
+      createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
+              as DateTime?,
+      updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
     ));
   }
 }
@@ -211,13 +297,20 @@ class _$TrackImpl implements _Track {
   const _$TrackImpl(
       {required this.id,
       required this.title,
-      required this.artistId,
-      required this.audioUrl,
-      required this.audioStoragePath,
+      this.description,
+      @JsonKey(name: 'artist_id') required this.artistId,
+      @JsonKey(name: 'audio_url') required this.audioUrl,
+      @JsonKey(name: 'audio_storage_path') required this.audioStoragePath,
+      @JsonKey(name: 'cover_image_url') this.coverImageUrl,
       required this.duration,
-      this.isGuided = false,
-      required this.createdAt,
-      required this.updatedAt});
+      @JsonKey(name: 'is_guided') required this.isGuided,
+      required this.category,
+      final List<String>? tags,
+      @JsonKey(name: 'is_premium') this.isPremium = false,
+      this.price,
+      @JsonKey(name: 'created_at') this.createdAt,
+      @JsonKey(name: 'updated_at') this.updatedAt})
+      : _tags = tags;
 
   factory _$TrackImpl.fromJson(Map<String, dynamic> json) =>
       _$$TrackImplFromJson(json);
@@ -227,24 +320,51 @@ class _$TrackImpl implements _Track {
   @override
   final String title;
   @override
+  final String? description;
+  @override
+  @JsonKey(name: 'artist_id')
   final String artistId;
   @override
+  @JsonKey(name: 'audio_url')
   final String audioUrl;
   @override
+  @JsonKey(name: 'audio_storage_path')
   final String audioStoragePath;
+  @override
+  @JsonKey(name: 'cover_image_url')
+  final String? coverImageUrl;
   @override
   final int duration;
   @override
-  @JsonKey()
+  @JsonKey(name: 'is_guided')
   final bool isGuided;
   @override
-  final DateTime createdAt;
+  final String category;
+  final List<String>? _tags;
   @override
-  final DateTime updatedAt;
+  List<String>? get tags {
+    final value = _tags;
+    if (value == null) return null;
+    if (_tags is EqualUnmodifiableListView) return _tags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  @JsonKey(name: 'is_premium')
+  final bool isPremium;
+  @override
+  final double? price;
+  @override
+  @JsonKey(name: 'created_at')
+  final DateTime? createdAt;
+  @override
+  @JsonKey(name: 'updated_at')
+  final DateTime? updatedAt;
 
   @override
   String toString() {
-    return 'Track(id: $id, title: $title, artistId: $artistId, audioUrl: $audioUrl, audioStoragePath: $audioStoragePath, duration: $duration, isGuided: $isGuided, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Track(id: $id, title: $title, description: $description, artistId: $artistId, audioUrl: $audioUrl, audioStoragePath: $audioStoragePath, coverImageUrl: $coverImageUrl, duration: $duration, isGuided: $isGuided, category: $category, tags: $tags, isPremium: $isPremium, price: $price, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -254,16 +374,26 @@ class _$TrackImpl implements _Track {
             other is _$TrackImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.artistId, artistId) ||
                 other.artistId == artistId) &&
             (identical(other.audioUrl, audioUrl) ||
                 other.audioUrl == audioUrl) &&
             (identical(other.audioStoragePath, audioStoragePath) ||
                 other.audioStoragePath == audioStoragePath) &&
+            (identical(other.coverImageUrl, coverImageUrl) ||
+                other.coverImageUrl == coverImageUrl) &&
             (identical(other.duration, duration) ||
                 other.duration == duration) &&
             (identical(other.isGuided, isGuided) ||
                 other.isGuided == isGuided) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
+            (identical(other.isPremium, isPremium) ||
+                other.isPremium == isPremium) &&
+            (identical(other.price, price) || other.price == price) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -272,8 +402,23 @@ class _$TrackImpl implements _Track {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, artistId, audioUrl,
-      audioStoragePath, duration, isGuided, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      title,
+      description,
+      artistId,
+      audioUrl,
+      audioStoragePath,
+      coverImageUrl,
+      duration,
+      isGuided,
+      category,
+      const DeepCollectionEquality().hash(_tags),
+      isPremium,
+      price,
+      createdAt,
+      updatedAt);
 
   /// Create a copy of Track
   /// with the given fields replaced by the non-null parameter values.
@@ -295,13 +440,20 @@ abstract class _Track implements Track {
   const factory _Track(
       {required final String id,
       required final String title,
-      required final String artistId,
-      required final String audioUrl,
+      final String? description,
+      @JsonKey(name: 'artist_id') required final String artistId,
+      @JsonKey(name: 'audio_url') required final String audioUrl,
+      @JsonKey(name: 'audio_storage_path')
       required final String audioStoragePath,
+      @JsonKey(name: 'cover_image_url') final String? coverImageUrl,
       required final int duration,
-      final bool isGuided,
-      required final DateTime createdAt,
-      required final DateTime updatedAt}) = _$TrackImpl;
+      @JsonKey(name: 'is_guided') required final bool isGuided,
+      required final String category,
+      final List<String>? tags,
+      @JsonKey(name: 'is_premium') final bool isPremium,
+      final double? price,
+      @JsonKey(name: 'created_at') final DateTime? createdAt,
+      @JsonKey(name: 'updated_at') final DateTime? updatedAt}) = _$TrackImpl;
 
   factory _Track.fromJson(Map<String, dynamic> json) = _$TrackImpl.fromJson;
 
@@ -310,19 +462,39 @@ abstract class _Track implements Track {
   @override
   String get title;
   @override
+  String? get description;
+  @override
+  @JsonKey(name: 'artist_id')
   String get artistId;
   @override
+  @JsonKey(name: 'audio_url')
   String get audioUrl;
   @override
+  @JsonKey(name: 'audio_storage_path')
   String get audioStoragePath;
+  @override
+  @JsonKey(name: 'cover_image_url')
+  String? get coverImageUrl;
   @override
   int get duration;
   @override
+  @JsonKey(name: 'is_guided')
   bool get isGuided;
   @override
-  DateTime get createdAt;
+  String get category;
   @override
-  DateTime get updatedAt;
+  List<String>? get tags;
+  @override
+  @JsonKey(name: 'is_premium')
+  bool get isPremium;
+  @override
+  double? get price;
+  @override
+  @JsonKey(name: 'created_at')
+  DateTime? get createdAt;
+  @override
+  @JsonKey(name: 'updated_at')
+  DateTime? get updatedAt;
 
   /// Create a copy of Track
   /// with the given fields replaced by the non-null parameter values.

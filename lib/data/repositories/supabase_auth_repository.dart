@@ -151,10 +151,12 @@ class SupabaseAuthRepository implements AuthRepository {
   }
 
   User _mapSupabaseUser(supabase.User supabaseUser) {
+    final metadata = supabaseUser.userMetadata ?? {};
     return User(
       id: supabaseUser.id,
       email: supabaseUser.email ?? '',
-      metadata: supabaseUser.userMetadata ?? {},
+      metadata: metadata,
+      isAdmin: metadata['is_admin'] == true,
     );
   }
 

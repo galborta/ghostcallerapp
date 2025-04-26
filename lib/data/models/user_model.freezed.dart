@@ -25,6 +25,7 @@ mixin _$User {
   Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
   DateTime? get createdAt => throw _privateConstructorUsedError;
+  bool get isAdmin => throw _privateConstructorUsedError;
 
   /// Serializes this User to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -44,7 +45,8 @@ abstract class $UserCopyWith<$Res> {
       {String id,
       String email,
       Map<String, dynamic>? metadata,
-      @JsonKey(name: 'created_at') DateTime? createdAt});
+      @JsonKey(name: 'created_at') DateTime? createdAt,
+      bool isAdmin});
 }
 
 /// @nodoc
@@ -66,6 +68,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? email = null,
     Object? metadata = freezed,
     Object? createdAt = freezed,
+    Object? isAdmin = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -84,6 +87,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -99,7 +106,8 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       {String id,
       String email,
       Map<String, dynamic>? metadata,
-      @JsonKey(name: 'created_at') DateTime? createdAt});
+      @JsonKey(name: 'created_at') DateTime? createdAt,
+      bool isAdmin});
 }
 
 /// @nodoc
@@ -118,6 +126,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? email = null,
     Object? metadata = freezed,
     Object? createdAt = freezed,
+    Object? isAdmin = null,
   }) {
     return _then(_$UserImpl(
       id: null == id
@@ -136,6 +145,10 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -147,7 +160,8 @@ class _$UserImpl implements _User {
       {required this.id,
       required this.email,
       final Map<String, dynamic>? metadata,
-      @JsonKey(name: 'created_at') this.createdAt})
+      @JsonKey(name: 'created_at') this.createdAt,
+      this.isAdmin = false})
       : _metadata = metadata;
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
@@ -170,10 +184,13 @@ class _$UserImpl implements _User {
   @override
   @JsonKey(name: 'created_at')
   final DateTime? createdAt;
+  @override
+  @JsonKey()
+  final bool isAdmin;
 
   @override
   String toString() {
-    return 'User(id: $id, email: $email, metadata: $metadata, createdAt: $createdAt)';
+    return 'User(id: $id, email: $email, metadata: $metadata, createdAt: $createdAt, isAdmin: $isAdmin)';
   }
 
   @override
@@ -185,13 +202,14 @@ class _$UserImpl implements _User {
             (identical(other.email, email) || other.email == email) &&
             const DeepCollectionEquality().equals(other._metadata, _metadata) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, email,
-      const DeepCollectionEquality().hash(_metadata), createdAt);
+      const DeepCollectionEquality().hash(_metadata), createdAt, isAdmin);
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -214,7 +232,8 @@ abstract class _User implements User {
       {required final String id,
       required final String email,
       final Map<String, dynamic>? metadata,
-      @JsonKey(name: 'created_at') final DateTime? createdAt}) = _$UserImpl;
+      @JsonKey(name: 'created_at') final DateTime? createdAt,
+      final bool isAdmin}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
@@ -227,6 +246,8 @@ abstract class _User implements User {
   @override
   @JsonKey(name: 'created_at')
   DateTime? get createdAt;
+  @override
+  bool get isAdmin;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.

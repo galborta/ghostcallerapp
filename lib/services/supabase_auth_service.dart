@@ -28,6 +28,9 @@ class SupabaseAuthService extends AuthService {
   }
 
   @override
+  User? get currentUser => _supabase.auth.currentUser;
+
+  @override
   Future<void> login() async {
     // This is a placeholder - actual login will be handled by Supabase UI
     throw UnimplementedError('Login is handled by Supabase Auth UI');

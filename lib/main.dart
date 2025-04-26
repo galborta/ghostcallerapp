@@ -11,6 +11,8 @@ import 'package:go_router/go_router.dart';
 import 'package:meditation_app/screens/placeholder_screen.dart';
 import 'package:meditation_app/services/auth_service.dart';
 import 'package:meditation_app/services/supabase_auth_service.dart';
+import 'package:meditation_app/app/features/settings/presentation/screens/settings_screen.dart';
+import 'package:meditation_app/app/features/admin/presentation/screens/admin_screen.dart';
 
 void main() async {
   try {
@@ -173,8 +175,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                   label: 'Meditate',
                 ),
                 NavigationDestination(
-                  icon: Icon(Icons.person),
-                  label: 'Profile',
+                  icon: Icon(Icons.settings),
+                  label: 'Settings',
                 ),
               ],
               selectedIndex: _calculateSelectedIndex(state),
@@ -187,7 +189,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                     context.go('/meditate');
                     break;
                   case 2:
-                    context.go('/profile');
+                    context.go('/settings');
                     break;
                 }
               },
@@ -204,8 +206,14 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const PlaceholderScreen(routeName: 'Meditate'),
           ),
           GoRoute(
-            path: '/profile',
-            builder: (context, state) => const PlaceholderScreen(routeName: 'Profile'),
+            path: '/settings',
+            builder: (context, state) => const SettingsScreen(),
+            routes: [
+              GoRoute(
+                path: 'admin/upload',
+                builder: (context, state) => const AdminScreen(),
+              ),
+            ],
           ),
         ],
       ),
@@ -235,6 +243,6 @@ int _calculateSelectedIndex(GoRouterState state) {
   final String location = state.uri.path;
   if (location == '/') return 0;
   if (location == '/meditate') return 1;
-  if (location == '/profile') return 2;
+  if (location == '/settings') return 2;
   return 0;
 }

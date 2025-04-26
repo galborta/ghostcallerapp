@@ -1,9 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:meditation_app/data/repositories/artist_repository.dart';
+import 'package:meditation_app/data/repositories/supabase_artist_repository.dart';
 import 'package:meditation_app/data/models/artist_model.dart';
 
 final artistRepositoryProvider = Provider<ArtistRepository>((ref) {
-  throw UnimplementedError('Repository must be overridden in tests');
+  final supabase = Supabase.instance.client;
+  return SupabaseArtistRepository(supabase);
 });
 
 final searchTermProvider = StateProvider<String>((ref) => '');
