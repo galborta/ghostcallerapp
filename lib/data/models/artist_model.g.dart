@@ -12,9 +12,9 @@ _$ArtistImpl _$$ArtistImplFromJson(Map<String, dynamic> json) => _$ArtistImpl(
       bio: json['bio'] as String,
       shortBio: json['short_bio'] as String,
       imageUrl: json['image_url'] as String,
-      featured: json['featured'] as bool,
+      featured: json['featured'] as bool? ?? false,
       revenueSharePercentage:
-          (json['revenue_share_percentage'] as num).toDouble(),
+          (json['revenue_share_percentage'] as num?)?.toInt() ?? 50,
       referralCode: json['referral_code'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
