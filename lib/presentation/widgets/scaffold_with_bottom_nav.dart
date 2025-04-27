@@ -39,10 +39,19 @@ class ScaffoldWithBottomNav extends StatelessWidget {
   }
 
   int _calculateSelectedIndex(BuildContext context) {
-    final location = GoRouterState.of(context).uri.path;
-    if (location.startsWith(RoutePath.home)) return 0;
-    if (location.startsWith(RoutePath.calendar)) return 1;
-    if (location.startsWith(RoutePath.settings)) return 2;
+    final String location = GoRouterState.of(context).uri.path;
+    
+    // Check for exact matches first
+    if (location == RoutePath.home) return 0;
+    if (location == RoutePath.calendar) return 1;
+    if (location == RoutePath.settings) return 2;
+    
+    // For nested routes, check the base path
+    final String basePath = '/' + location.split('/')[1];
+    if (basePath == '/artist' || basePath == '/session-setup') return 0;
+    if (basePath == '/calendar') return 1;
+    if (basePath == '/settings') return 2;
+    
     return 0;
   }
 
