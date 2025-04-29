@@ -24,6 +24,7 @@ class MeditationSession {
   final Duration currentPosition;
   final DateTime? endTime;
   final String? errorMessage;
+  final Duration elapsedMeditationTime;
 
   MeditationSession({
     required this.track,
@@ -33,11 +34,12 @@ class MeditationSession {
     this.currentPosition = Duration.zero,
     this.endTime,
     this.errorMessage,
+    this.elapsedMeditationTime = Duration.zero,
   });
 
   Duration get remaining {
     if (state == MeditationState.completed) return Duration.zero;
-    final timeLeft = duration - currentPosition;
+    final timeLeft = duration - elapsedMeditationTime;
     return timeLeft.isNegative ? Duration.zero : timeLeft;
   }
 
@@ -54,6 +56,7 @@ class MeditationSession {
     Duration? currentPosition,
     DateTime? endTime,
     String? errorMessage,
+    Duration? elapsedMeditationTime,
   }) {
     return MeditationSession(
       track: track ?? this.track,
@@ -63,6 +66,7 @@ class MeditationSession {
       currentPosition: currentPosition ?? this.currentPosition,
       endTime: endTime ?? this.endTime,
       errorMessage: errorMessage ?? this.errorMessage,
+      elapsedMeditationTime: elapsedMeditationTime ?? this.elapsedMeditationTime,
     );
   }
 }
@@ -71,6 +75,7 @@ class MeditationSession {
 class MeditationService extends StateNotifier<MeditationSession?> {
   final MeditationAudioService _audioService;
   StreamSubscription? _positionSubscription;
+  Timer? _meditationTimer;
 
   MeditationService(this._audioService) : super(null);
 
@@ -99,19 +104,21 @@ class MeditationService extends StateNotifier<MeditationSession?> {
         volume: volume,
       );
       
+      // Start the session with initial elapsed time
       state = state!.copyWith(
         state: MeditationState.inProgress,
         startTime: DateTime.now(),
+        elapsedMeditationTime: Duration.zero,
       );
+      
+      // Start meditation timer before audio to ensure timer starts immediately
+      _startMeditationTimer();
       
       // Start listening to position updates
       _positionSubscription?.cancel();
       _positionSubscription = _audioService.positionStream.listen((position) {
         if (state?.isInProgress == true) {
           state = state!.copyWith(currentPosition: position);
-          if (position >= duration) {
-            completeSession();
-          }
         }
       });
       
@@ -125,6 +132,29 @@ class MeditationService extends StateNotifier<MeditationSession?> {
       developer.log('Error starting session: $e', error: e);
       throw Exception('Failed to start meditation session: $e');
     }
+  }
+
+  void _startMeditationTimer() {
+    _meditationTimer?.cancel();
+    
+    // Emit first update immediately
+    if (state?.isInProgress == true) {
+      state = state!.copyWith(
+        elapsedMeditationTime: state!.elapsedMeditationTime + const Duration(seconds: 1)
+      );
+    }
+    
+    _meditationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (state?.isInProgress == true) {
+        state = state!.copyWith(
+          elapsedMeditationTime: state!.elapsedMeditationTime + const Duration(seconds: 1)
+        );
+        
+        if (state!.elapsedMeditationTime >= state!.duration) {
+          completeSession();
+        }
+      }
+    });
   }
 
   Future<void> pauseSession() async {
@@ -171,6 +201,7 @@ class MeditationService extends StateNotifier<MeditationSession?> {
     try {
       await _audioService.stop();
       _positionSubscription?.cancel();
+      _meditationTimer?.cancel();
       
       state = state!.copyWith(
         state: MeditationState.completed,
@@ -193,6 +224,7 @@ class MeditationService extends StateNotifier<MeditationSession?> {
     try {
       await _audioService.stop();
       _positionSubscription?.cancel();
+      _meditationTimer?.cancel();
       state = null;
       developer.log('Session cancelled successfully');
     } catch (e) {
@@ -204,6 +236,7 @@ class MeditationService extends StateNotifier<MeditationSession?> {
   @override
   void dispose() {
     _positionSubscription?.cancel();
+    _meditationTimer?.cancel();
     super.dispose();
   }
 }

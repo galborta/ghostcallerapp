@@ -50,7 +50,7 @@ class TrackListItem extends StatelessWidget {
             size: 16,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(width: Spacing.xSmall),
+          const SizedBox(width: Spacing.small),
           Text(
             track.isGuided ? 'Guided' : 'Music Only',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -63,7 +63,7 @@ class TrackListItem extends StatelessWidget {
             size: 16,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(width: Spacing.xSmall),
+          const SizedBox(width: Spacing.small),
           Text(
             _formatDuration(track.duration),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(

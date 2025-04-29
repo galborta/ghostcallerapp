@@ -31,6 +31,8 @@ mixin _$Track {
   String get audioStoragePath => throw _privateConstructorUsedError;
   @JsonKey(name: 'cover_image_url')
   String? get coverImageUrl => throw _privateConstructorUsedError;
+  @JsonKey(name: 'cover_image_storage_path')
+  String? get coverImageStoragePath => throw _privateConstructorUsedError;
   int get duration => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_guided')
   bool get isGuided => throw _privateConstructorUsedError;
@@ -66,6 +68,7 @@ abstract class $TrackCopyWith<$Res> {
       @JsonKey(name: 'audio_url') String audioUrl,
       @JsonKey(name: 'audio_storage_path') String audioStoragePath,
       @JsonKey(name: 'cover_image_url') String? coverImageUrl,
+      @JsonKey(name: 'cover_image_storage_path') String? coverImageStoragePath,
       int duration,
       @JsonKey(name: 'is_guided') bool isGuided,
       String category,
@@ -98,6 +101,7 @@ class _$TrackCopyWithImpl<$Res, $Val extends Track>
     Object? audioUrl = null,
     Object? audioStoragePath = null,
     Object? coverImageUrl = freezed,
+    Object? coverImageStoragePath = freezed,
     Object? duration = null,
     Object? isGuided = null,
     Object? category = null,
@@ -135,6 +139,10 @@ class _$TrackCopyWithImpl<$Res, $Val extends Track>
       coverImageUrl: freezed == coverImageUrl
           ? _value.coverImageUrl
           : coverImageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      coverImageStoragePath: freezed == coverImageStoragePath
+          ? _value.coverImageStoragePath
+          : coverImageStoragePath // ignore: cast_nullable_to_non_nullable
               as String?,
       duration: null == duration
           ? _value.duration
@@ -187,6 +195,7 @@ abstract class _$$TrackImplCopyWith<$Res> implements $TrackCopyWith<$Res> {
       @JsonKey(name: 'audio_url') String audioUrl,
       @JsonKey(name: 'audio_storage_path') String audioStoragePath,
       @JsonKey(name: 'cover_image_url') String? coverImageUrl,
+      @JsonKey(name: 'cover_image_storage_path') String? coverImageStoragePath,
       int duration,
       @JsonKey(name: 'is_guided') bool isGuided,
       String category,
@@ -217,6 +226,7 @@ class __$$TrackImplCopyWithImpl<$Res>
     Object? audioUrl = null,
     Object? audioStoragePath = null,
     Object? coverImageUrl = freezed,
+    Object? coverImageStoragePath = freezed,
     Object? duration = null,
     Object? isGuided = null,
     Object? category = null,
@@ -254,6 +264,10 @@ class __$$TrackImplCopyWithImpl<$Res>
       coverImageUrl: freezed == coverImageUrl
           ? _value.coverImageUrl
           : coverImageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      coverImageStoragePath: freezed == coverImageStoragePath
+          ? _value.coverImageStoragePath
+          : coverImageStoragePath // ignore: cast_nullable_to_non_nullable
               as String?,
       duration: null == duration
           ? _value.duration
@@ -302,6 +316,7 @@ class _$TrackImpl implements _Track {
       @JsonKey(name: 'audio_url') required this.audioUrl,
       @JsonKey(name: 'audio_storage_path') required this.audioStoragePath,
       @JsonKey(name: 'cover_image_url') this.coverImageUrl,
+      @JsonKey(name: 'cover_image_storage_path') this.coverImageStoragePath,
       required this.duration,
       @JsonKey(name: 'is_guided') required this.isGuided,
       required this.category,
@@ -334,6 +349,9 @@ class _$TrackImpl implements _Track {
   @JsonKey(name: 'cover_image_url')
   final String? coverImageUrl;
   @override
+  @JsonKey(name: 'cover_image_storage_path')
+  final String? coverImageStoragePath;
+  @override
   final int duration;
   @override
   @JsonKey(name: 'is_guided')
@@ -364,7 +382,7 @@ class _$TrackImpl implements _Track {
 
   @override
   String toString() {
-    return 'Track(id: $id, title: $title, description: $description, artistId: $artistId, audioUrl: $audioUrl, audioStoragePath: $audioStoragePath, coverImageUrl: $coverImageUrl, duration: $duration, isGuided: $isGuided, category: $category, tags: $tags, isPremium: $isPremium, price: $price, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Track(id: $id, title: $title, description: $description, artistId: $artistId, audioUrl: $audioUrl, audioStoragePath: $audioStoragePath, coverImageUrl: $coverImageUrl, coverImageStoragePath: $coverImageStoragePath, duration: $duration, isGuided: $isGuided, category: $category, tags: $tags, isPremium: $isPremium, price: $price, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -384,6 +402,8 @@ class _$TrackImpl implements _Track {
                 other.audioStoragePath == audioStoragePath) &&
             (identical(other.coverImageUrl, coverImageUrl) ||
                 other.coverImageUrl == coverImageUrl) &&
+            (identical(other.coverImageStoragePath, coverImageStoragePath) ||
+                other.coverImageStoragePath == coverImageStoragePath) &&
             (identical(other.duration, duration) ||
                 other.duration == duration) &&
             (identical(other.isGuided, isGuided) ||
@@ -411,6 +431,7 @@ class _$TrackImpl implements _Track {
       audioUrl,
       audioStoragePath,
       coverImageUrl,
+      coverImageStoragePath,
       duration,
       isGuided,
       category,
@@ -446,6 +467,8 @@ abstract class _Track implements Track {
       @JsonKey(name: 'audio_storage_path')
       required final String audioStoragePath,
       @JsonKey(name: 'cover_image_url') final String? coverImageUrl,
+      @JsonKey(name: 'cover_image_storage_path')
+      final String? coverImageStoragePath,
       required final int duration,
       @JsonKey(name: 'is_guided') required final bool isGuided,
       required final String category,
@@ -475,6 +498,9 @@ abstract class _Track implements Track {
   @override
   @JsonKey(name: 'cover_image_url')
   String? get coverImageUrl;
+  @override
+  @JsonKey(name: 'cover_image_storage_path')
+  String? get coverImageStoragePath;
   @override
   int get duration;
   @override

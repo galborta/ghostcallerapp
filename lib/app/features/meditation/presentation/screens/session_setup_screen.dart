@@ -53,9 +53,9 @@ class _SessionSetupContent extends StatefulWidget {
 }
 
 class _SessionSetupContentState extends State<_SessionSetupContent> {
-  bool enableReminders = true;
-  bool enableBackgroundNoise = false;
-  double volume = 0.8;
+  bool isGuidedMeditation = true;
+  int selectedDuration = 10; // Default duration in minutes
+  final List<int> availableDurations = [5, 10, 15, 20, 30];
 
   @override
   Widget build(BuildContext context) {
@@ -69,46 +69,68 @@ class _SessionSetupContentState extends State<_SessionSetupContent> {
         ),
         const SizedBox(height: Spacing.small),
         Text(
-          'Duration: ${widget.track.duration} minutes',
+          'Select your meditation preferences',
           style: AppTypography.body1,
         ),
         const SizedBox(height: Spacing.xxLarge),
 
-        // Settings section
-        Text(
-          'Session Settings',
-          style: AppTypography.headline3,
-        ),
-        const SizedBox(height: Spacing.medium),
-        
-        // Volume control
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: const Text('Volume'),
-          subtitle: Slider(
-            value: volume,
-            onChanged: (value) => setState(() => volume = value),
-            divisions: 10,
-            label: '${(volume * 100).round()}%',
+        // Meditation type toggle
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(Spacing.medium),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Meditation Type',
+                  style: AppTypography.headline3,
+                ),
+                const SizedBox(height: Spacing.medium),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Guided Meditation'),
+                  subtitle: Text(isGuidedMeditation 
+                    ? 'Meditation with voice guidance'
+                    : 'Music only meditation'),
+                  value: isGuidedMeditation,
+                  onChanged: (value) => setState(() => isGuidedMeditation = value),
+                ),
+              ],
+            ),
           ),
         ),
         
-        // Reminders toggle
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: const Text('Enable Reminders'),
-          subtitle: const Text('Get notified to stay focused'),
-          value: enableReminders,
-          onChanged: (value) => setState(() => enableReminders = value),
-        ),
-        
-        // Background noise toggle
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: const Text('Background Noise'),
-          subtitle: const Text('Add ambient sounds'),
-          value: enableBackgroundNoise,
-          onChanged: (value) => setState(() => enableBackgroundNoise = value),
+        const SizedBox(height: Spacing.large),
+
+        // Duration selection
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(Spacing.medium),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Duration',
+                  style: AppTypography.headline3,
+                ),
+                const SizedBox(height: Spacing.medium),
+                Wrap(
+                  spacing: Spacing.small,
+                  children: availableDurations.map((duration) {
+                    return ChoiceChip(
+                      label: Text('$duration min'),
+                      selected: selectedDuration == duration,
+                      onSelected: (selected) {
+                        if (selected) {
+                          setState(() => selectedDuration = duration);
+                        }
+                      },
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
         ),
 
         const SizedBox(height: Spacing.xxLarge),
@@ -116,11 +138,9 @@ class _SessionSetupContentState extends State<_SessionSetupContent> {
         // Start button
         FilledButton.icon(
           onPressed: () {
-            // TODO: Start meditation session
             context.push('/meditation/${widget.track.id}', extra: {
-              'volume': volume,
-              'enableReminders': enableReminders,
-              'enableBackgroundNoise': enableBackgroundNoise,
+              'isGuidedMeditation': isGuidedMeditation,
+              'duration': selectedDuration,
             });
           },
           icon: const Icon(Icons.play_arrow),

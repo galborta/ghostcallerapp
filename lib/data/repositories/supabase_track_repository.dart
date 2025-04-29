@@ -9,6 +9,7 @@ class SupabaseTrackRepository implements TrackRepository {
   final SupabaseClient _client;
   static const _maxRetries = 3;
   static const _retryDelay = Duration(seconds: 2);
+  static const _tableName = 'meditation_tracks';
   
   /// Constructor
   SupabaseTrackRepository(this._client);
@@ -30,7 +31,7 @@ class SupabaseTrackRepository implements TrackRepository {
   @override
   Future<List<Track>> getTracksByArtist(String artistId) async {
     final response = await _client
-        .from('meditation_tracks')
+        .from(_tableName)
         .select()
         .eq('artist_id', artistId);
     
@@ -40,7 +41,7 @@ class SupabaseTrackRepository implements TrackRepository {
   @override
   Future<Track?> getTrackById(String id) async {
     final response = await _client
-        .from('meditation_tracks')
+        .from(_tableName)
         .select()
         .eq('id', id)
         .limit(1);
@@ -67,14 +68,14 @@ class SupabaseTrackRepository implements TrackRepository {
     // 1. Upload the audio file to storage with retry
     final file = File(filePath);
     final fileName = path.basename(filePath);
-    final storagePath = 'audio/$artistId/${DateTime.now().millisecondsSinceEpoch}_$fileName';
+    final storagePath = 'tracks/$artistId/${DateTime.now().millisecondsSinceEpoch}_$fileName';
     
     await _retry(() => _client.storage.from('audio').upload(
       storagePath,
       file,
       fileOptions: const FileOptions(
         cacheControl: '3600',
-        upsert: true, // Changed to true to handle potential retries
+        upsert: true,
       ),
     ));
 
@@ -87,14 +88,14 @@ class SupabaseTrackRepository implements TrackRepository {
     if (coverImagePath != null) {
       final coverFile = File(coverImagePath);
       final coverFileName = path.basename(coverImagePath);
-      coverImageStoragePath = 'images/$artistId/${DateTime.now().millisecondsSinceEpoch}_$coverFileName';
+      coverImageStoragePath = 'artists/$artistId/${DateTime.now().millisecondsSinceEpoch}_$coverFileName';
       
       await _retry(() => _client.storage.from('images').upload(
         coverImageStoragePath!,
         coverFile,
         fileOptions: const FileOptions(
           cacheControl: '3600',
-          upsert: true, // Changed to true to handle potential retries
+          upsert: true,
         ),
       ));
 
@@ -103,7 +104,7 @@ class SupabaseTrackRepository implements TrackRepository {
 
     // 4. Create the track record in the database with retry
     final response = await _retry(() => _client
-        .from('meditation_tracks')
+        .from(_tableName)
         .insert({
           'title': title,
           'artist_id': artistId,
@@ -114,6 +115,7 @@ class SupabaseTrackRepository implements TrackRepository {
           'category': category,
           'description': description,
           'cover_image_url': coverImageUrl,
+          'cover_image_storage_path': coverImageStoragePath,
           'tags': tags,
           'is_premium': isPremium,
           'price': price,
@@ -140,12 +142,12 @@ class SupabaseTrackRepository implements TrackRepository {
     // 3. Delete the cover image if it exists with retry
     if (track.coverImageUrl != null) {
       final coverImagePath = track.coverImageUrl!.split('/').last;
-      await _retry(() => _client.storage.from('images').remove(['images/${track.artistId}/$coverImagePath']));
+      await _retry(() => _client.storage.from('images').remove(['artists/${track.artistId}/$coverImagePath']));
     }
 
     // 4. Delete the database record with retry
     await _retry(() => _client
-        .from('meditation_tracks')
+        .from(_tableName)
         .delete()
         .eq('id', id));
   }

@@ -70,7 +70,6 @@ migrate_working_dir/
 **/ios/Runner/GeneratedPluginRegistrant.*
 
 # Web related
-lib/generated_plugin_registrant.dart
 
 # Environment files
 .env

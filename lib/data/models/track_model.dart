@@ -13,6 +13,7 @@ class Track with _$Track {
     @JsonKey(name: 'audio_url') required String audioUrl,
     @JsonKey(name: 'audio_storage_path') required String audioStoragePath,
     @JsonKey(name: 'cover_image_url') String? coverImageUrl,
+    @JsonKey(name: 'cover_image_storage_path') String? coverImageStoragePath,
     required int duration,
     @JsonKey(name: 'is_guided') required bool isGuided,
     required String category,
@@ -24,4 +25,10 @@ class Track with _$Track {
   }) = _Track;
 
   factory Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);
+}
+
+/// Extension methods for Track
+extension TrackExtension on Track {
+  /// Alias for isGuided to maintain consistency with naming in the app
+  bool get isGuidedMeditation => isGuided;
 } 

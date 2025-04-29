@@ -190,6 +190,52 @@ class MeditationPlayerScreen extends HookConsumerWidget {
                     ),
                     const Spacer(),
 
+                    // Progress bar
+                    StreamBuilder<Duration?>(
+                      stream: ref.watch(durationStreamProvider.stream),
+                      builder: (context, durationSnapshot) {
+                        return StreamBuilder<Duration>(
+                          stream: ref.watch(positionStreamProvider.stream),
+                          builder: (context, positionSnapshot) {
+                            final duration = durationSnapshot.data ?? Duration.zero;
+                            final position = positionSnapshot.data ?? Duration.zero;
+                            
+                            String formatDuration(Duration d) {
+                              return '${d.inMinutes}:${(d.inSeconds % 60).toString().padLeft(2, '0')}';
+                            }
+
+                            return Column(
+                              children: [
+                                Slider(
+                                  value: duration.inSeconds > 0 
+                                    ? position.inSeconds / duration.inSeconds 
+                                    : 0.0,
+                                  onChanged: (value) {
+                                    if (duration.inSeconds > 0) {
+                                      final newPosition = Duration(
+                                        seconds: (value * duration.inSeconds).round()
+                                      );
+                                      ref.read(audioServiceProvider).seek(newPosition);
+                                    }
+                                  },
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: Spacing.medium),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(formatDuration(position)),
+                                      Text(formatDuration(duration)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+
                     // Timer
                     const TimerDisplay(),
                     const Spacer(),

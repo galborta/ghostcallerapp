@@ -2,17 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meditation_app/app/core/config/supabase_config.dart';
+import 'package:meditation_app/config/router.dart';
 import 'package:meditation_app/app/shared/theme/app_theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:meditation_app/screens/auth_test_screen.dart';
 import 'package:app_links/app_links.dart';
 import 'package:meditation_app/data/services/supabase_service.dart';
-import 'package:go_router/go_router.dart';
-import 'package:meditation_app/screens/placeholder_screen.dart';
-import 'package:meditation_app/services/auth_service.dart';
-import 'package:meditation_app/services/supabase_auth_service.dart';
-import 'package:meditation_app/app/features/settings/presentation/screens/settings_screen.dart';
-import 'package:meditation_app/app/features/admin/presentation/screens/admin_screen.dart';
 
 void main() async {
   try {
@@ -73,12 +67,8 @@ void main() async {
     }
     
     runApp(
-      ProviderScope(
-        overrides: [
-          // Override the abstract AuthService with our Supabase implementation
-          authServiceProvider.overrideWith((ref) => ref.watch(supabaseAuthServiceProvider)),
-        ],
-        child: const MyApp(),
+      const ProviderScope(
+        child: MyApp(),
       ),
     );
   } catch (e, stackTrace) {
@@ -134,93 +124,6 @@ Future<void> _handleDeepLink(Uri uri) async {
   }
 }
 
-final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authServiceProvider);
-  
-  return GoRouter(
-    initialLocation: '/',
-    redirect: (context, state) {
-      final isLoggedIn = authState;
-      final isLoginRoute = state.uri.path == '/login';
-
-      debugPrint('Current auth state - isLoggedIn: $isLoggedIn, current path: ${state.uri.path}');
-
-      if (!isLoggedIn && !isLoginRoute) {
-        debugPrint('Not logged in, redirecting to login');
-        return '/login';
-      }
-      if (isLoggedIn && isLoginRoute) {
-        debugPrint('Already logged in, redirecting to home');
-        return '/';
-      }
-      return null;
-    },
-    routes: [
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const AuthTestScreen(),
-      ),
-      ShellRoute(
-        builder: (context, state, child) {
-          return Scaffold(
-            body: child,
-            bottomNavigationBar: NavigationBar(
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.self_improvement),
-                  label: 'Meditate',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.settings),
-                  label: 'Settings',
-                ),
-              ],
-              selectedIndex: _calculateSelectedIndex(state),
-              onDestinationSelected: (index) {
-                switch (index) {
-                  case 0:
-                    context.go('/');
-                    break;
-                  case 1:
-                    context.go('/meditate');
-                    break;
-                  case 2:
-                    context.go('/settings');
-                    break;
-                }
-              },
-            ),
-          );
-        },
-        routes: [
-          GoRoute(
-            path: '/',
-            builder: (context, state) => const PlaceholderScreen(routeName: 'Home'),
-          ),
-          GoRoute(
-            path: '/meditate',
-            builder: (context, state) => const PlaceholderScreen(routeName: 'Meditate'),
-          ),
-          GoRoute(
-            path: '/settings',
-            builder: (context, state) => const SettingsScreen(),
-            routes: [
-              GoRoute(
-                path: 'admin/upload',
-                builder: (context, state) => const AdminScreen(),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ],
-  );
-});
-
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
@@ -230,19 +133,9 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'Meditation App',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       routerConfig: router,
     );
   }
-}
-
-int _calculateSelectedIndex(GoRouterState state) {
-  final String location = state.uri.path;
-  if (location == '/') return 0;
-  if (location == '/meditate') return 1;
-  if (location == '/settings') return 2;
-  return 0;
 }

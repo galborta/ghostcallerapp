@@ -47,5 +47,11 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Access to pick audio files for upload</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>Access to pick files for upload</string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>Access to pick files for upload</string>
 </dict>
 </plist>

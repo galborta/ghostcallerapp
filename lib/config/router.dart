@@ -4,21 +4,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meditation_app/presentation/widgets/scaffold_with_bottom_nav.dart';
 import 'package:meditation_app/app/features/meditation/presentation/screens/session_setup_screen.dart';
 import 'package:meditation_app/app/features/settings/presentation/screens/admin_screen.dart';
+import 'package:meditation_app/presentation/screens/home_screen.dart';
+import 'package:meditation_app/presentation/screens/artist_detail_screen.dart';
+import 'package:meditation_app/app/features/settings/presentation/screens/settings_screen.dart';
+import 'package:meditation_app/app/features/meditation/presentation/screens/meditation_player_screen.dart';
+import 'package:meditation_app/app/features/calendar/presentation/screens/calendar_screen.dart';
 
 // Route path constants
 class RoutePath {
-  static const String splash = '/';
+  static const String splash = '/splash';
   static const String login = '/login';
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
-  static const String home = '/home';
+  static const String home = '/';
   static const String artistDetail = '/artist/:id';
   static const String sessionSetup = '/session-setup/:artistId';
   static const String sessionSetupWithTrack = '/session-setup/:artistId/:trackId';
   static const String meditationPlayer = '/meditation/:id';
   static const String calendar = '/calendar';
   static const String settings = '/settings';
-  static const String adminUpload = '/admin/upload';
+  static const String adminUpload = '/settings/admin/upload';
 }
 
 // Route name constants
@@ -38,44 +43,12 @@ class RouteName {
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
-  // TODO: Replace with actual auth state provider
   final authState = ref.watch(authStateProvider);
 
   return GoRouter(
-    initialLocation: RoutePath.splash,
+    initialLocation: RoutePath.home,
     debugLogDiagnostics: true,
-    redirect: (context, state) {
-      // Get the current path
-      final currentPath = state.uri.path;
-      
-      // Check if the path is one of the auth routes
-      final isAuthRoute = currentPath == RoutePath.login ||
-          currentPath == RoutePath.register ||
-          currentPath == RoutePath.forgotPassword;
-
-      // If user is not authenticated and trying to access protected route,
-      // redirect to login
-      if (!authState.isAuthenticated && !isAuthRoute && currentPath != RoutePath.splash) {
-        return RoutePath.login;
-      }
-
-      // If user is authenticated and trying to access auth route,
-      // redirect to home
-      if (authState.isAuthenticated && isAuthRoute) {
-        return RoutePath.home;
-      }
-
-      // No redirect needed
-      return null;
-    },
     routes: [
-      // Splash screen
-      GoRoute(
-        path: RoutePath.splash,
-        name: RouteName.splash,
-        builder: (context, state) => const SplashScreen(),
-      ),
-      
       // Auth routes
       GoRoute(
         path: RoutePath.login,
@@ -126,13 +99,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                   trackId: state.pathParameters['trackId'],
                 ),
               ),
-              GoRoute(
-                path: 'meditation/:id',
-                name: RouteName.meditationPlayer,
-                builder: (context, state) => MeditationPlayerScreen(
-                  meditationId: state.pathParameters['id']!,
-                ),
-              ),
             ],
           ),
           
@@ -150,11 +116,20 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const SettingsScreen(),
             routes: [
               GoRoute(
-                path: 'upload',
+                path: 'admin/upload',
                 name: RouteName.adminUpload,
                 builder: (context, state) => const AdminScreen(),
               ),
             ],
+          ),
+          
+          // Meditation player route (at shell level)
+          GoRoute(
+            path: RoutePath.meditationPlayer,
+            name: RouteName.meditationPlayer,
+            builder: (context, state) => MeditationPlayerRoute(
+              meditationId: state.pathParameters['id']!,
+            ),
           ),
         ],
       ),
@@ -163,75 +138,75 @@ final routerProvider = Provider<GoRouter>((ref) {
 });
 
 // Temporary auth state provider for compilation
-// TODO: Replace with actual auth state provider implementation
 final authStateProvider = Provider<AuthState>((ref) => AuthState());
 
 class AuthState {
-  bool get isAuthenticated => false;
+  bool get isAuthenticated => true;
 }
 
 // Temporary screen widgets for compilation
-// TODO: Replace with actual screen implementations
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const Placeholder();
-}
-
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Placeholder();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Login')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => context.go(RoutePath.home),
+          child: const Text('Go to Home'),
+        ),
+      ),
+    );
+  }
 }
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Placeholder();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Register')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => context.go(RoutePath.login),
+          child: const Text('Go to Login'),
+        ),
+      ),
+    );
+  }
 }
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Placeholder();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Forgot Password')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => context.go(RoutePath.login),
+          child: const Text('Back to Login'),
+        ),
+      ),
+    );
+  }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const Placeholder();
-}
-
-class ArtistDetailScreen extends StatelessWidget {
-  const ArtistDetailScreen({super.key, required this.artistId});
-  final String artistId;
-  @override
-  Widget build(BuildContext context) => const Placeholder();
-}
-
-class SessionSetupScreen extends StatelessWidget {
-  const SessionSetupScreen({super.key, required this.artistId, this.trackId});
-  final String artistId;
-  final String? trackId;
-  @override
-  Widget build(BuildContext context) => const Placeholder();
-}
-
-class MeditationPlayerScreen extends StatelessWidget {
-  const MeditationPlayerScreen({super.key, required this.meditationId});
+class MeditationPlayerRoute extends StatelessWidget {
+  const MeditationPlayerRoute({super.key, required this.meditationId});
   final String meditationId;
+  
   @override
-  Widget build(BuildContext context) => const Placeholder();
-}
+  Widget build(BuildContext context) {
+    final extra = GoRouterState.of(context).extra as Map<String, dynamic>?;
+    final isGuidedMeditation = extra?['isGuidedMeditation'] as bool? ?? true;
+    final duration = extra?['duration'] as int? ?? 10;
 
-class CalendarScreen extends StatelessWidget {
-  const CalendarScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const Placeholder();
-}
-
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const Placeholder();
+    return MeditationPlayerScreen(
+      trackId: meditationId,
+      isGuidedMeditation: isGuidedMeditation,
+      durationMinutes: duration,
+    );
+  }
 } 

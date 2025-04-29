@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../state/artist_provider.dart';
-import '../widgets/artist_card.dart';
-import '../theme/spacing.dart';
+import 'package:meditation_app/presentation/state/artist_provider.dart';
+import 'package:meditation_app/presentation/widgets/artist_card.dart';
+import 'package:meditation_app/presentation/theme/spacing.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});

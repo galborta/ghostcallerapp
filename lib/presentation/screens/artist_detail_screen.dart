@@ -26,74 +26,34 @@ class ArtistDetailScreen extends ConsumerWidget {
       body: artistAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(child: Text('Error: $error')),
-        data: (artist) => CustomScrollView(
-          slivers: [
-            _buildAppBar(context, artist),
-            _buildContent(context, artist, tracksAsync),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/session-setup/$artistId'),
-        label: const Text('Start Meditation'),
-        icon: const Icon(Icons.play_arrow),
+        data: (artist) {
+          if (artist == null) {
+            return const Center(child: Text('Artist not found'));
+          }
+          return CustomScrollView(
+            slivers: [
+              _buildAppBar(context, artist),
+              _buildContent(context, artist, tracksAsync),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildAppBar(BuildContext context, Artist artist) {
+  SliverAppBar _buildAppBar(BuildContext context, Artist artist) {
     return SliverAppBar(
       expandedHeight: 300,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
-        title: Text(
-          artist.name,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: Colors.white,
-                shadows: [
-                  const Shadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 3.0,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ],
-              ),
-        ),
-        background: Stack(
-          fit: StackFit.expand,
-          children: [
-            CachedNetworkImage(
-              imageUrl: artist.imageUrl,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                color: Theme.of(context).colorScheme.surfaceVariant,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-              errorWidget: (context, url, error) => Container(
-                color: Theme.of(context).colorScheme.surfaceVariant,
-                child: Icon(
-                  Icons.person,
-                  size: 48,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
-            // Gradient overlay for better text visibility
-            DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.7),
-                  ],
-                ),
-              ),
-            ),
-          ],
+        title: Text(artist.name),
+        background: CachedNetworkImage(
+          imageUrl: artist.imageUrl,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
       ),
     );

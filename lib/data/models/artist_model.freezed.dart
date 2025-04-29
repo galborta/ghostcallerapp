@@ -20,17 +20,13 @@ Artist _$ArtistFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Artist {
-  @JsonKey(name: 'id')
   String get id => throw _privateConstructorUsedError;
-  @JsonKey(name: 'name')
   String get name => throw _privateConstructorUsedError;
-  @JsonKey(name: 'bio')
   String get bio => throw _privateConstructorUsedError;
   @JsonKey(name: 'short_bio')
   String get shortBio => throw _privateConstructorUsedError;
   @JsonKey(name: 'image_url')
   String get imageUrl => throw _privateConstructorUsedError;
-  @JsonKey(name: 'featured')
   bool get featured => throw _privateConstructorUsedError;
   @JsonKey(name: 'revenue_share_percentage')
   int get revenueSharePercentage => throw _privateConstructorUsedError;
@@ -56,12 +52,12 @@ abstract class $ArtistCopyWith<$Res> {
       _$ArtistCopyWithImpl<$Res, Artist>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') String id,
-      @JsonKey(name: 'name') String name,
-      @JsonKey(name: 'bio') String bio,
+      {String id,
+      String name,
+      String bio,
       @JsonKey(name: 'short_bio') String shortBio,
       @JsonKey(name: 'image_url') String imageUrl,
-      @JsonKey(name: 'featured') bool featured,
+      bool featured,
       @JsonKey(name: 'revenue_share_percentage') int revenueSharePercentage,
       @JsonKey(name: 'referral_code') String referralCode,
       @JsonKey(name: 'created_at') DateTime createdAt,
@@ -147,12 +143,12 @@ abstract class _$$ArtistImplCopyWith<$Res> implements $ArtistCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') String id,
-      @JsonKey(name: 'name') String name,
-      @JsonKey(name: 'bio') String bio,
+      {String id,
+      String name,
+      String bio,
       @JsonKey(name: 'short_bio') String shortBio,
       @JsonKey(name: 'image_url') String imageUrl,
-      @JsonKey(name: 'featured') bool featured,
+      bool featured,
       @JsonKey(name: 'revenue_share_percentage') int revenueSharePercentage,
       @JsonKey(name: 'referral_code') String referralCode,
       @JsonKey(name: 'created_at') DateTime createdAt,
@@ -232,12 +228,12 @@ class __$$ArtistImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ArtistImpl implements _Artist {
   const _$ArtistImpl(
-      {@JsonKey(name: 'id') required this.id,
-      @JsonKey(name: 'name') required this.name,
-      @JsonKey(name: 'bio') required this.bio,
+      {required this.id,
+      required this.name,
+      required this.bio,
       @JsonKey(name: 'short_bio') required this.shortBio,
       @JsonKey(name: 'image_url') required this.imageUrl,
-      @JsonKey(name: 'featured') this.featured = false,
+      this.featured = false,
       @JsonKey(name: 'revenue_share_percentage')
       this.revenueSharePercentage = 50,
       @JsonKey(name: 'referral_code') required this.referralCode,
@@ -248,13 +244,10 @@ class _$ArtistImpl implements _Artist {
       _$$ArtistImplFromJson(json);
 
   @override
-  @JsonKey(name: 'id')
   final String id;
   @override
-  @JsonKey(name: 'name')
   final String name;
   @override
-  @JsonKey(name: 'bio')
   final String bio;
   @override
   @JsonKey(name: 'short_bio')
@@ -263,7 +256,7 @@ class _$ArtistImpl implements _Artist {
   @JsonKey(name: 'image_url')
   final String imageUrl;
   @override
-  @JsonKey(name: 'featured')
+  @JsonKey()
   final bool featured;
   @override
   @JsonKey(name: 'revenue_share_percentage')
@@ -340,12 +333,12 @@ class _$ArtistImpl implements _Artist {
 
 abstract class _Artist implements Artist {
   const factory _Artist(
-          {@JsonKey(name: 'id') required final String id,
-          @JsonKey(name: 'name') required final String name,
-          @JsonKey(name: 'bio') required final String bio,
+          {required final String id,
+          required final String name,
+          required final String bio,
           @JsonKey(name: 'short_bio') required final String shortBio,
           @JsonKey(name: 'image_url') required final String imageUrl,
-          @JsonKey(name: 'featured') final bool featured,
+          final bool featured,
           @JsonKey(name: 'revenue_share_percentage')
           final int revenueSharePercentage,
           @JsonKey(name: 'referral_code') required final String referralCode,
@@ -356,13 +349,10 @@ abstract class _Artist implements Artist {
   factory _Artist.fromJson(Map<String, dynamic> json) = _$ArtistImpl.fromJson;
 
   @override
-  @JsonKey(name: 'id')
   String get id;
   @override
-  @JsonKey(name: 'name')
   String get name;
   @override
-  @JsonKey(name: 'bio')
   String get bio;
   @override
   @JsonKey(name: 'short_bio')
@@ -371,7 +361,6 @@ abstract class _Artist implements Artist {
   @JsonKey(name: 'image_url')
   String get imageUrl;
   @override
-  @JsonKey(name: 'featured')
   bool get featured;
   @override
   @JsonKey(name: 'revenue_share_percentage')

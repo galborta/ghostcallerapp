@@ -4,10 +4,15 @@ import 'package:meditation_app/data/repositories/auth_repository.dart';
 import 'package:meditation_app/data/repositories/supabase_auth_repository.dart';
 import 'package:meditation_app/data/services/supabase_service.dart';
 
+/// Provider for the Supabase service
+final supabaseServiceProvider = Provider<SupabaseService>((ref) {
+  return SupabaseService();
+});
+
 /// Provider for the auth repository implementation
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final supabaseService = ref.watch(supabaseServiceProvider);
-  return SupabaseAuthRepository(supabaseService);
+  return SupabaseAuthRepository(supabaseService: supabaseService);
 });
 
 /// Provider that streams authentication state changes

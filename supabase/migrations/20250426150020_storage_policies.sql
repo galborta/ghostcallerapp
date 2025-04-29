@@ -27,66 +27,51 @@ CREATE POLICY "Allow public to download files"
 ON storage.objects FOR SELECT
 USING (bucket_id IN ('audio', 'images'));
 
--- Allow admin users to upload audio files
-CREATE POLICY "Allow admin users to upload audio files"
+-- Temporarily allow any authenticated user to upload audio files
+CREATE POLICY "Allow authenticated users to upload audio files"
 ON storage.objects FOR INSERT
 WITH CHECK (
   bucket_id = 'audio'
   AND auth.role() = 'authenticated'
-  AND auth.is_admin()
 );
 
--- Allow admin users to update audio files
-CREATE POLICY "Allow admin users to update audio files"
+-- Allow authenticated users to update audio files
+CREATE POLICY "Allow authenticated users to update audio files"
 ON storage.objects FOR UPDATE
 USING (
   bucket_id = 'audio'
   AND auth.role() = 'authenticated'
-  AND auth.is_admin()
 )
 WITH CHECK (
   bucket_id = 'audio'
   AND auth.role() = 'authenticated'
-  AND auth.is_admin()
 );
 
--- Allow admin users to delete audio files
-CREATE POLICY "Allow admin users to delete audio files"
-ON storage.objects FOR DELETE
-USING (
-  bucket_id = 'audio'
-  AND auth.role() = 'authenticated'
-  AND auth.is_admin()
-);
-
--- Allow admin users to upload images
-CREATE POLICY "Allow admin users to upload images"
+-- Allow authenticated users to upload images
+CREATE POLICY "Allow authenticated users to upload images"
 ON storage.objects FOR INSERT
 WITH CHECK (
   bucket_id = 'images'
   AND auth.role() = 'authenticated'
-  AND auth.is_admin()
 );
 
--- Allow admin users to update images
-CREATE POLICY "Allow admin users to update images"
+-- Allow authenticated users to update images
+CREATE POLICY "Allow authenticated users to update images"
 ON storage.objects FOR UPDATE
 USING (
   bucket_id = 'images'
   AND auth.role() = 'authenticated'
-  AND auth.is_admin()
 )
 WITH CHECK (
   bucket_id = 'images'
   AND auth.role() = 'authenticated'
-  AND auth.is_admin()
 );
 
--- Allow admin users to delete images
-CREATE POLICY "Allow admin users to delete images"
+-- Allow authenticated users to delete their own uploads
+CREATE POLICY "Allow users to delete own uploads"
 ON storage.objects FOR DELETE
 USING (
-  bucket_id = 'images'
+  bucket_id IN ('audio', 'images')
   AND auth.role() = 'authenticated'
-  AND auth.is_admin()
+  AND owner = auth.uid()
 ); 

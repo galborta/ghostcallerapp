@@ -1,12 +1,68 @@
--- Enable storage extension if not already enabled
-CREATE EXTENSION IF NOT EXISTS "storage";
+-- Enable the storage extension
+create extension if not exists "storage-api" with schema "extensions";
 
--- Create storage buckets directly
-INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types, owner, created_at, updated_at, avif_autodetection)
-VALUES 
-    ('audio', 'audio', true, 524288000, ARRAY['audio/mpeg', 'audio/mp3', 'audio/wav'], null, NOW(), NOW(), false),
-    ('images', 'images', true, 5242880, ARRAY['image/jpeg', 'image/png', 'image/webp'], null, NOW(), NOW(), false)
-ON CONFLICT (id) DO UPDATE SET
-    public = EXCLUDED.public,
-    file_size_limit = EXCLUDED.file_size_limit,
-    allowed_mime_types = EXCLUDED.allowed_mime_types; 
+-- Create the audio bucket
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'audio',
+  'audio',
+  true,
+  524288000, -- 500MB
+  array['audio/mpeg', 'audio/mp3', 'audio/wav']
+);
+
+-- Create the images bucket
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'images',
+  'images',
+  true,
+  5242880, -- 5MB
+  array['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+);
+
+-- Set up policies for audio bucket
+create policy "Public Access"
+  on storage.objects for select
+  using ( bucket_id = 'audio' AND (storage.foldername(name))[1] = 'tracks' );
+
+create policy "Authenticated users can upload audio"
+  on storage.objects for insert
+  to authenticated
+  with check (
+    bucket_id = 'audio' 
+    AND (storage.foldername(name))[1] = 'tracks'
+    AND (storage.foldername(name))[2] = auth.uid()
+  );
+
+create policy "Users can delete their own audio"
+  on storage.objects for delete
+  to authenticated
+  using (
+    bucket_id = 'audio'
+    AND (storage.foldername(name))[1] = 'tracks'
+    AND (storage.foldername(name))[2] = auth.uid()
+  );
+
+-- Set up policies for images bucket
+create policy "Public Access Images"
+  on storage.objects for select
+  using ( bucket_id = 'images' AND (storage.foldername(name))[1] = 'artists' );
+
+create policy "Authenticated users can upload images"
+  on storage.objects for insert
+  to authenticated
+  with check (
+    bucket_id = 'images'
+    AND (storage.foldername(name))[1] = 'artists'
+    AND (storage.foldername(name))[2] = auth.uid()
+  );
+
+create policy "Users can delete their own images"
+  on storage.objects for delete
+  to authenticated
+  using (
+    bucket_id = 'images'
+    AND (storage.foldername(name))[1] = 'artists'
+    AND (storage.foldername(name))[2] = auth.uid()
+  ); 
