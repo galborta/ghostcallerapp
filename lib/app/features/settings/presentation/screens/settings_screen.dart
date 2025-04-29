@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meditation_app/core/constants/spacing.dart';
-import 'package:meditation_app/services/supabase_auth_service.dart';
 import 'package:meditation_app/presentation/state/auth_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -114,8 +113,27 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
             title: const Text('Logout', style: TextStyle(color: Colors.red)),
-            onTap: () {
-              ref.read(supabaseAuthServiceProvider).logout();
+            onTap: () async {
+              try {
+                await ref.read(authRepositoryProvider).signOut();
+                // Invalidate auth state to trigger router redirect
+                ref.invalidate(isAuthenticatedProvider);
+                ref.invalidate(currentUserProvider);
+                
+                if (context.mounted) {
+                  // Navigate to login screen
+                  context.go('/login');
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to logout. Please try again.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
             },
           ),
         ],

@@ -14,38 +14,35 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-MeditationSessionRecord _$MeditationSessionRecordFromJson(
-    Map<String, dynamic> json) {
-  return _MeditationSessionRecord.fromJson(json);
+MeditationSession _$MeditationSessionFromJson(Map<String, dynamic> json) {
+  return _MeditationSession.fromJson(json);
 }
 
 /// @nodoc
-mixin _$MeditationSessionRecord {
+mixin _$MeditationSession {
   String get id => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
   String get trackId => throw _privateConstructorUsedError;
   DateTime get startTime => throw _privateConstructorUsedError;
   DateTime get endTime => throw _privateConstructorUsedError;
   Duration get duration => throw _privateConstructorUsedError;
-  Duration get completedDuration => throw _privateConstructorUsedError;
-  bool get wasCompleted => throw _privateConstructorUsedError;
-  String? get notes => throw _privateConstructorUsedError;
+  bool get isCompleted => throw _privateConstructorUsedError;
 
-  /// Serializes this MeditationSessionRecord to a JSON map.
+  /// Serializes this MeditationSession to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of MeditationSessionRecord
+  /// Create a copy of MeditationSession
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $MeditationSessionRecordCopyWith<MeditationSessionRecord> get copyWith =>
+  $MeditationSessionCopyWith<MeditationSession> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $MeditationSessionRecordCopyWith<$Res> {
-  factory $MeditationSessionRecordCopyWith(MeditationSessionRecord value,
-          $Res Function(MeditationSessionRecord) then) =
-      _$MeditationSessionRecordCopyWithImpl<$Res, MeditationSessionRecord>;
+abstract class $MeditationSessionCopyWith<$Res> {
+  factory $MeditationSessionCopyWith(
+          MeditationSession value, $Res Function(MeditationSession) then) =
+      _$MeditationSessionCopyWithImpl<$Res, MeditationSession>;
   @useResult
   $Res call(
       {String id,
@@ -54,23 +51,20 @@ abstract class $MeditationSessionRecordCopyWith<$Res> {
       DateTime startTime,
       DateTime endTime,
       Duration duration,
-      Duration completedDuration,
-      bool wasCompleted,
-      String? notes});
+      bool isCompleted});
 }
 
 /// @nodoc
-class _$MeditationSessionRecordCopyWithImpl<$Res,
-        $Val extends MeditationSessionRecord>
-    implements $MeditationSessionRecordCopyWith<$Res> {
-  _$MeditationSessionRecordCopyWithImpl(this._value, this._then);
+class _$MeditationSessionCopyWithImpl<$Res, $Val extends MeditationSession>
+    implements $MeditationSessionCopyWith<$Res> {
+  _$MeditationSessionCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of MeditationSessionRecord
+  /// Create a copy of MeditationSession
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -81,9 +75,7 @@ class _$MeditationSessionRecordCopyWithImpl<$Res,
     Object? startTime = null,
     Object? endTime = null,
     Object? duration = null,
-    Object? completedDuration = null,
-    Object? wasCompleted = null,
-    Object? notes = freezed,
+    Object? isCompleted = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -110,29 +102,20 @@ class _$MeditationSessionRecordCopyWithImpl<$Res,
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as Duration,
-      completedDuration: null == completedDuration
-          ? _value.completedDuration
-          : completedDuration // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      wasCompleted: null == wasCompleted
-          ? _value.wasCompleted
-          : wasCompleted // ignore: cast_nullable_to_non_nullable
+      isCompleted: null == isCompleted
+          ? _value.isCompleted
+          : isCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$MeditationSessionRecordImplCopyWith<$Res>
-    implements $MeditationSessionRecordCopyWith<$Res> {
-  factory _$$MeditationSessionRecordImplCopyWith(
-          _$MeditationSessionRecordImpl value,
-          $Res Function(_$MeditationSessionRecordImpl) then) =
-      __$$MeditationSessionRecordImplCopyWithImpl<$Res>;
+abstract class _$$MeditationSessionImplCopyWith<$Res>
+    implements $MeditationSessionCopyWith<$Res> {
+  factory _$$MeditationSessionImplCopyWith(_$MeditationSessionImpl value,
+          $Res Function(_$MeditationSessionImpl) then) =
+      __$$MeditationSessionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -142,22 +125,18 @@ abstract class _$$MeditationSessionRecordImplCopyWith<$Res>
       DateTime startTime,
       DateTime endTime,
       Duration duration,
-      Duration completedDuration,
-      bool wasCompleted,
-      String? notes});
+      bool isCompleted});
 }
 
 /// @nodoc
-class __$$MeditationSessionRecordImplCopyWithImpl<$Res>
-    extends _$MeditationSessionRecordCopyWithImpl<$Res,
-        _$MeditationSessionRecordImpl>
-    implements _$$MeditationSessionRecordImplCopyWith<$Res> {
-  __$$MeditationSessionRecordImplCopyWithImpl(
-      _$MeditationSessionRecordImpl _value,
-      $Res Function(_$MeditationSessionRecordImpl) _then)
+class __$$MeditationSessionImplCopyWithImpl<$Res>
+    extends _$MeditationSessionCopyWithImpl<$Res, _$MeditationSessionImpl>
+    implements _$$MeditationSessionImplCopyWith<$Res> {
+  __$$MeditationSessionImplCopyWithImpl(_$MeditationSessionImpl _value,
+      $Res Function(_$MeditationSessionImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of MeditationSessionRecord
+  /// Create a copy of MeditationSession
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -168,11 +147,9 @@ class __$$MeditationSessionRecordImplCopyWithImpl<$Res>
     Object? startTime = null,
     Object? endTime = null,
     Object? duration = null,
-    Object? completedDuration = null,
-    Object? wasCompleted = null,
-    Object? notes = freezed,
+    Object? isCompleted = null,
   }) {
-    return _then(_$MeditationSessionRecordImpl(
+    return _then(_$MeditationSessionImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -197,39 +174,28 @@ class __$$MeditationSessionRecordImplCopyWithImpl<$Res>
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as Duration,
-      completedDuration: null == completedDuration
-          ? _value.completedDuration
-          : completedDuration // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      wasCompleted: null == wasCompleted
-          ? _value.wasCompleted
-          : wasCompleted // ignore: cast_nullable_to_non_nullable
+      isCompleted: null == isCompleted
+          ? _value.isCompleted
+          : isCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$MeditationSessionRecordImpl extends _MeditationSessionRecord {
-  const _$MeditationSessionRecordImpl(
+class _$MeditationSessionImpl implements _MeditationSession {
+  const _$MeditationSessionImpl(
       {required this.id,
       required this.userId,
       required this.trackId,
       required this.startTime,
       required this.endTime,
       required this.duration,
-      required this.completedDuration,
-      required this.wasCompleted,
-      this.notes})
-      : super._();
+      required this.isCompleted});
 
-  factory _$MeditationSessionRecordImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MeditationSessionRecordImplFromJson(json);
+  factory _$MeditationSessionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MeditationSessionImplFromJson(json);
 
   @override
   final String id;
@@ -244,22 +210,18 @@ class _$MeditationSessionRecordImpl extends _MeditationSessionRecord {
   @override
   final Duration duration;
   @override
-  final Duration completedDuration;
-  @override
-  final bool wasCompleted;
-  @override
-  final String? notes;
+  final bool isCompleted;
 
   @override
   String toString() {
-    return 'MeditationSessionRecord(id: $id, userId: $userId, trackId: $trackId, startTime: $startTime, endTime: $endTime, duration: $duration, completedDuration: $completedDuration, wasCompleted: $wasCompleted, notes: $notes)';
+    return 'MeditationSession(id: $id, userId: $userId, trackId: $trackId, startTime: $startTime, endTime: $endTime, duration: $duration, isCompleted: $isCompleted)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$MeditationSessionRecordImpl &&
+            other is _$MeditationSessionImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.trackId, trackId) || other.trackId == trackId) &&
@@ -268,50 +230,44 @@ class _$MeditationSessionRecordImpl extends _MeditationSessionRecord {
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
             (identical(other.duration, duration) ||
                 other.duration == duration) &&
-            (identical(other.completedDuration, completedDuration) ||
-                other.completedDuration == completedDuration) &&
-            (identical(other.wasCompleted, wasCompleted) ||
-                other.wasCompleted == wasCompleted) &&
-            (identical(other.notes, notes) || other.notes == notes));
+            (identical(other.isCompleted, isCompleted) ||
+                other.isCompleted == isCompleted));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, userId, trackId, startTime,
-      endTime, duration, completedDuration, wasCompleted, notes);
+      endTime, duration, isCompleted);
 
-  /// Create a copy of MeditationSessionRecord
+  /// Create a copy of MeditationSession
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$MeditationSessionRecordImplCopyWith<_$MeditationSessionRecordImpl>
-      get copyWith => __$$MeditationSessionRecordImplCopyWithImpl<
-          _$MeditationSessionRecordImpl>(this, _$identity);
+  _$$MeditationSessionImplCopyWith<_$MeditationSessionImpl> get copyWith =>
+      __$$MeditationSessionImplCopyWithImpl<_$MeditationSessionImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MeditationSessionRecordImplToJson(
+    return _$$MeditationSessionImplToJson(
       this,
     );
   }
 }
 
-abstract class _MeditationSessionRecord extends MeditationSessionRecord {
-  const factory _MeditationSessionRecord(
+abstract class _MeditationSession implements MeditationSession {
+  const factory _MeditationSession(
       {required final String id,
       required final String userId,
       required final String trackId,
       required final DateTime startTime,
       required final DateTime endTime,
       required final Duration duration,
-      required final Duration completedDuration,
-      required final bool wasCompleted,
-      final String? notes}) = _$MeditationSessionRecordImpl;
-  const _MeditationSessionRecord._() : super._();
+      required final bool isCompleted}) = _$MeditationSessionImpl;
 
-  factory _MeditationSessionRecord.fromJson(Map<String, dynamic> json) =
-      _$MeditationSessionRecordImpl.fromJson;
+  factory _MeditationSession.fromJson(Map<String, dynamic> json) =
+      _$MeditationSessionImpl.fromJson;
 
   @override
   String get id;
@@ -326,16 +282,12 @@ abstract class _MeditationSessionRecord extends MeditationSessionRecord {
   @override
   Duration get duration;
   @override
-  Duration get completedDuration;
-  @override
-  bool get wasCompleted;
-  @override
-  String? get notes;
+  bool get isCompleted;
 
-  /// Create a copy of MeditationSessionRecord
+  /// Create a copy of MeditationSession
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$MeditationSessionRecordImplCopyWith<_$MeditationSessionRecordImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$MeditationSessionImplCopyWith<_$MeditationSessionImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

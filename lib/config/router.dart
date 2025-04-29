@@ -9,6 +9,8 @@ import 'package:meditation_app/presentation/screens/artist_detail_screen.dart';
 import 'package:meditation_app/app/features/settings/presentation/screens/settings_screen.dart';
 import 'package:meditation_app/app/features/meditation/presentation/screens/meditation_player_screen.dart';
 import 'package:meditation_app/app/features/calendar/presentation/screens/calendar_screen.dart';
+import 'package:meditation_app/presentation/screens/auth_screen.dart';
+import 'package:meditation_app/presentation/state/auth_provider.dart';
 
 // Route path constants
 class RoutePath {
@@ -43,27 +45,30 @@ class RouteName {
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authStateProvider);
+  final isAuthenticated = ref.watch(isAuthenticatedProvider);
 
   return GoRouter(
     initialLocation: RoutePath.home,
     debugLogDiagnostics: true,
+    redirect: (context, state) {
+      final isLoggingIn = state.matchedLocation == RoutePath.login;
+      
+      if (!isAuthenticated && !isLoggingIn) {
+        return RoutePath.login;
+      }
+      
+      if (isAuthenticated && isLoggingIn) {
+        return RoutePath.home;
+      }
+      
+      return null;
+    },
     routes: [
       // Auth routes
       GoRoute(
         path: RoutePath.login,
         name: RouteName.login,
-        builder: (context, state) => const LoginScreen(),
-      ),
-      GoRoute(
-        path: RoutePath.register,
-        name: RouteName.register,
-        builder: (context, state) => const RegisterScreen(),
-      ),
-      GoRoute(
-        path: RoutePath.forgotPassword,
-        name: RouteName.forgotPassword,
-        builder: (context, state) => const ForgotPasswordScreen(),
+        builder: (context, state) => const AuthScreen(),
       ),
 
       // Main app shell with bottom navigation
@@ -136,9 +141,6 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
-
-// Temporary auth state provider for compilation
-final authStateProvider = Provider<AuthState>((ref) => AuthState());
 
 class AuthState {
   bool get isAuthenticated => true;

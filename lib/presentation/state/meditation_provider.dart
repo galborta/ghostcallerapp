@@ -4,6 +4,7 @@ import 'package:meditation_app/data/models/track_model.dart';
 import 'package:meditation_app/data/services/audio_service.dart';
 import 'dart:async';
 import 'dart:developer' as developer;
+import 'package:meditation_app/presentation/state/meditation_time_provider.dart';
 
 /// Enum representing the different states of a meditation session
 enum MeditationState {
@@ -225,7 +226,18 @@ class MeditationService extends StateNotifier<MeditationSession?> {
       await _audioService.stop();
       _positionSubscription?.cancel();
       _meditationTimer?.cancel();
+      
+      // Store the current state before nulling it
+      final currentState = state;
+      
+      // Set state to paused first to trigger the time accumulation
+      if (currentState?.isInProgress == true) {
+        state = currentState!.copyWith(state: MeditationState.paused);
+      }
+      
+      // Then set to null
       state = null;
+      
       developer.log('Session cancelled successfully');
     } catch (e) {
       developer.log('Error cancelling session: $e', error: e);
@@ -328,4 +340,47 @@ final positionStreamProvider = StreamProvider.autoDispose<Duration>((ref) {
 final durationStreamProvider = StreamProvider.autoDispose<Duration?>((ref) {
   final audioService = ref.watch(audioServiceProvider);
   return audioService.durationStream;
+});
+
+/// Provider for total meditation time
+final totalMeditationTimeProvider = StateProvider<Duration>((ref) {
+  return const Duration();
+});
+
+/// Provider to update total meditation time
+final totalMeditationTimeUpdaterProvider = Provider((ref) {
+  // Listen to meditation session changes
+  ref.listen<MeditationSession?>(meditationServiceProvider, (previous, next) {
+    if (previous?.isInProgress == true && next?.isInProgress == false) {
+      // When meditation stops (paused or completed), add the elapsed time
+      final elapsedTime = next?.elapsedMeditationTime ?? Duration.zero;
+      final currentTotal = ref.read(totalMeditationTimeProvider);
+      ref.read(totalMeditationTimeProvider.notifier).state = currentTotal + elapsedTime;
+      
+      // Log to Supabase
+      ref.read(persistedTotalMeditationTimeProvider.notifier)
+         .logMeditationTime(elapsedTime.inSeconds);
+    }
+  });
+
+  // Set up continuous timer for active sessions
+  Timer? activeTimer;
+  ref.listen<MeditationSession?>(meditationServiceProvider, (previous, next) {
+    activeTimer?.cancel();
+    
+    if (next?.isInProgress == true) {
+      // Update total time every second while meditation is active
+      activeTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+        final currentTotal = ref.read(totalMeditationTimeProvider);
+        ref.read(totalMeditationTimeProvider.notifier).state = currentTotal + const Duration(seconds: 1);
+      });
+    }
+  });
+
+  // Clean up timer on dispose
+  ref.onDispose(() {
+    activeTimer?.cancel();
+  });
+  
+  return null;
 });
