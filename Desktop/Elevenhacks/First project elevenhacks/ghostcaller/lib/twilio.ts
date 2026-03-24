@@ -101,7 +101,8 @@ export async function initiateCall(request: CallRequest): Promise<{
   return {
     callSid,
     conversationId,
-    status: callSid ? "initiated" : "failed",
+    status: callSid || conversationId ? "initiated" : "failed",
+    _debug: data, // temporary: shows raw ElevenLabs response in Network tab
   };
 }
 

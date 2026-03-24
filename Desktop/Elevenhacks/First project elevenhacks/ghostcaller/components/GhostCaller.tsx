@@ -135,9 +135,10 @@ export default function GhostCaller() {
               const res = await fetch(`/api/call?${callParams.toString()}`);
               const data = await res.json();
 
-              if (data.callSid) {
+              const callId = data.callSid || data.conversationId;
+              if (callId) {
                 setCallStatus("ringing");
-                pollCallStatus(data.callSid, params.businessName);
+                if (data.callSid) pollCallStatus(data.callSid, params.businessName);
                 return JSON.stringify({
                   success: true,
                   message: `Call initiated to ${params.businessName}. Ringing now.`,
