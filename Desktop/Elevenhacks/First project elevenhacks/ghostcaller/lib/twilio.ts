@@ -8,13 +8,22 @@ import { CallRequest } from "./types";
  */
 function normalizePhoneNumber(raw: string): string {
   const trimmed = raw.trim();
+
   if (trimmed.startsWith("+")) {
-    // Keep the + and strip everything else that isn't a digit
-    return "+" + trimmed.slice(1).replace(/\D/g, "");
+    // Already has country code — just strip formatting characters
+    const normalized = "+" + trimmed.slice(1).replace(/\D/g, "");
+    if (normalized.length < 10) {
+      console.warn(`[normalizePhoneNumber] Suspiciously short number after normalization: "${normalized}" (raw: "${raw}")`);
+    }
+    return normalized;
   }
-  // No + prefix — strip non-digits and prepend +
-  // Caller must ensure the country code is included in the number
-  return "+" + trimmed.replace(/\D/g, "");
+
+  // No + prefix. Strip non-digits and prepend +.
+  // WARNING: this likely means the agent passed a local format number without country code.
+  const digits = trimmed.replace(/\D/g, "");
+  const normalized = "+" + digits;
+  console.warn(`[normalizePhoneNumber] No country code detected — got "${raw}", normalized to "${normalized}". Agent should be passing E.164 format.`);
+  return normalized;
 }
 
 /**

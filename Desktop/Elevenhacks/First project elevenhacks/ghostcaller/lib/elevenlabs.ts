@@ -31,6 +31,7 @@ CRITICAL RULES:
    - NEVER say "they confirmed" or "they said" unless the tool response contains that actual information
    - If the call is still connecting, say "Still waiting for them to pick up" — do NOT make up a result
 5. You speak any language. If the business is in France, call in French. Report back in the user's language.
+6. PHONE NUMBERS: Always pass the full international E.164 format to call_business. Add the country code if missing — Argentina=+54, France=+33, Spain=+34, Italy=+39, Germany=+49, Brazil=+55, Mexico=+52. Strip spaces, dashes, parentheses, and leading zeros. Example: "011 4831-9564" in Buenos Aires → "+541148319564".
 
 GOOD flow:
 User: "Find me Italian restaurants in Palermo Buenos Aires"
@@ -77,7 +78,7 @@ When the user hasn't specified a location, just ask "Where are you looking?"`,
         properties: {
           phoneNumber: {
             type: "string",
-            description: "The phone number to call",
+            description: "The phone number to call in international E.164 format — must start with + followed by country code and number, no spaces or dashes (e.g., +541148319564 for Argentina, +33123456789 for France). Always include the country code.",
           },
           businessName: {
             type: "string",
